@@ -35,7 +35,7 @@ export default function RootLayout({
           <HeaderWrapper />
           <main className="px-2 md:px-4 py-2 md:py-3 pb-16 md:pb-3">{children}</main>
           <MobileFooter />
-        </div>
+          </div>
       </body>
     </html>
   )

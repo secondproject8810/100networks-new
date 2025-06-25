@@ -7,15 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import Link from "next/link"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { BookmarkIcon, Heart, MessageCircle, MoreHorizontal, X, Send, ImageIcon, Plus, Smile, AtSign, Hash, Share, Trash2, Flag, Copy, Link, Facebook, Twitter, Users, Check, ArrowRight, CornerUpRight } from "lucide-react"
+import { BookmarkIcon, Heart, MessageCircle, MoreHorizontal, X, Send, ImageIcon, Plus, Smile, AtSign, Hash, Share, Trash2, Flag, Copy, LinkIcon, Facebook, Twitter, Users, Check, ArrowRight, CornerUpRight } from "lucide-react"
 import { useState } from "react"
 
 export default function FeedPage() {
-  const [postText, setPostText] = useState("")
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set())
   const [savedPosts, setSavedPosts] = useState<Set<string>>(new Set())
   const [selectedPost, setSelectedPost] = useState<any>(null)
@@ -27,29 +25,6 @@ export default function FeedPage() {
   const [reportReason, setReportReason] = useState("")
   const [selectedMutualFollowers, setSelectedMutualFollowers] = useState<string[]>([])
   const [shareMessage, setShareMessage] = useState("")
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setSelectedImage(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handlePost = () => {
-    // Handle posting logic here
-    console.log("Posting:", { text: postText, image: selectedImage })
-    setPostText("")
-    setSelectedImage(null)
-    setIsDialogOpen(false)
-  }
-
-  const removeImage = () => {
-    setSelectedImage(null)
-  }
 
   const toggleLike = (postId: string) => {
     setLikedPosts(prev => {
@@ -257,139 +232,26 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
   }
 
   return (
-    <div className="min-h-full">
-      <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-[85%] lg:max-w-[75%] xl:max-w-[65%] mx-auto px-4 sm:px-6 py-4">
+            <div className="min-h-full">
+      <div className="w-full max-w-[95%] sm:max-w-[90%] md:max-w-[85%] lg:max-w-[75%] xl:max-w-[65%] mx-auto px-2 sm:px-6 py-4">
         {/* Header Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-          <div className="text-center sm:text-left">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
+          <div className="text-left">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-heading text-primary-navy mb-2">What's Happening Today?</h1>
-            <p className="text-slate-600 font-subheading text-base sm:text-lg md:text-xl">Follow, share, and grow with your network</p>
-          </div>
+      </div>
 
           {/* New Post Button */}
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                className="bg-primary-navy hover:bg-primary-navy/90 text-white rounded-full px-4 sm:px-6 py-2 shadow-lg hover:shadow-xl transition-all duration-200 font-subheading text-sm sm:text-base w-full sm:w-auto"
-              >
-                <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                New Post
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-[95%] sm:max-w-[600px] p-0 bg-white rounded-2xl shadow-2xl border-0 mx-2 sm:mx-auto [&>button]:!outline-none [&>button]:!ring-0 [&>button]:!shadow-none [&>button]:focus:!outline-none [&>button]:focus:!ring-0 [&>button]:focus:!shadow-none">
-              <DialogHeader className="p-3 sm:p-6 pb-2 sm:pb-4 border-b border-slate-100">
-                <DialogTitle className="text-lg sm:text-xl font-heading text-primary-navy">Create a Post</DialogTitle>
-              </DialogHeader>
-              
-              <div className="p-3 sm:p-6">
-                <div className="flex space-x-2 sm:space-x-4 mb-3 sm:mb-4">
-                  <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
-                    <AvatarImage src="/placeholder-user.jpg" alt="User" />
-                    <AvatarFallback className="bg-[#0056B3]/10 text-[#0056B3] font-medium">UN</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <Textarea
-                      placeholder="What's happening in your professional journey?"
-                      value={postText}
-                      onChange={(e) => setPostText(e.target.value)}
-                      className="min-h-[80px] sm:min-h-[120px] resize-none border-slate-200 !outline-none !ring-0 !shadow-none focus:!outline-none focus:!ring-0 focus:!shadow-none focus:!border-slate-200 text-sm sm:text-base font-subheading rounded-xl"
-                      autoFocus
-                    />
-                  </div>
-                </div>
-
-                {selectedImage && (
-                  <div className="relative mb-3 sm:mb-4">
-                    <img
-                      src={selectedImage}
-                      alt="Selected"
-                      className="w-full h-40 sm:h-64 object-cover rounded-xl border border-slate-200"
-                    />
-                    <Button
-                      variant="destructive"
-                      size="icon"
-                      className="absolute top-2 right-2 sm:top-3 sm:right-3 h-7 w-7 sm:h-8 sm:w-8 rounded-full shadow-lg"
-                      onClick={removeImage}
-                    >
-                      <X className="h-3 w-3 sm:h-4 sm:w-4" />
-                    </Button>
-                  </div>
-                )}
-
-                {/* Post Options */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-3 sm:pt-4 border-t border-slate-100 gap-3 sm:gap-0">
-                  <div className="flex items-center space-x-2 sm:space-x-4 overflow-x-auto">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="image-upload-modal"
-                      />
-                      <label htmlFor="image-upload-modal">
-                        <Button variant="ghost" size="sm" className="cursor-pointer text-slate-600 hover:text-primary-navy hover:bg-primary-navy/10 text-xs sm:text-sm" asChild>
-                          <span>
-                            <ImageIcon className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
-                            Photo
-                          </span>
-                        </Button>
-                      </label>
-                   
-                      <Button variant="ghost" size="sm" className="text-slate-600 hover:text-primary-navy hover:bg-primary-navy/10 text-xs sm:text-sm">
-                        <Smile className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
-                        Emoji
-                      </Button>
-                   
-                      <Button variant="ghost" size="sm" className="text-slate-600 hover:text-primary-navy hover:bg-primary-navy/10 text-xs sm:text-sm">
-                        <AtSign className="h-4 w-4 sm:h-5 sm:w-5 mr-1 sm:mr-2" />
-                        Mention
-                      </Button>
-                    </div>
-
-                    <div className="flex space-x-2 sm:space-x-3 w-full sm:w-auto">
-                      <Button
-                        variant="outline"
-                        onClick={() => setIsDialogOpen(false)}
-                        className="rounded-full px-4 sm:px-6 border-slate-200 text-slate-600 hover:bg-slate-50 flex-1 sm:flex-initial text-xs sm:text-sm"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handlePost}
-                        disabled={!postText.trim() && !selectedImage}
-                        className="bg-primary-navy hover:bg-primary-navy/90 text-white rounded-full px-4 sm:px-6 shadow-md hover:shadow-lg transition-all flex-1 sm:flex-initial text-xs sm:text-sm"
-                      >
-                        <Send className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
-                        Post
-                      </Button>
-                    </div>
-                  </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <Link href="/create-post">
+            <Button 
+              className="bg-primary-navy hover:bg-primary-navy/90 text-white rounded-full w-10 h-10 sm:w-auto sm:h-auto sm:px-6 sm:py-2 shadow-lg hover:shadow-xl transition-all duration-200 font-subheading text-xs sm:text-base flex-shrink-0 flex items-center justify-center"
+            >
+              <Plus className="h-4 w-4 sm:h-4 sm:w-4 sm:mr-2" />
+              <span className="hidden sm:inline">New Post</span>
+            </Button>
+          </Link>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap gap-2 sm:gap-3 mb-6 sm:mb-8 overflow-x-auto pb-2">
-          <Button variant="default" className="rounded-full bg-primary-navy hover:bg-primary-navy/90 text-white shadow-sm text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 flex-shrink-0">
-            All Posts
-          </Button>
-          <Button variant="outline" className="rounded-full border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 flex-shrink-0">
-            Tech Industry
-          </Button>
-          <Button variant="outline" className="rounded-full border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 flex-shrink-0">
-            Job Opportunities
-          </Button>
-          <Button variant="outline" className="rounded-full border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 flex-shrink-0">
-            Career Insights
-          </Button>
-          <Button variant="outline" className="rounded-full border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 flex-shrink-0">
-            Success Stories
-          </Button>
-          <Button variant="outline" className="rounded-full border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 flex-shrink-0">
-            Professional Tips
-          </Button>
-        </div>
+
 
         {/* Feed Posts */}
         <div className="space-y-6 sm:space-y-8">
@@ -403,7 +265,7 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
                       <AvatarFallback className="bg-[#0056B3]/10 text-[#0056B3] font-medium text-sm sm:text-base md:text-lg">
                         {post.author.split(' ').map(n => n[0]).join('')}
                       </AvatarFallback>
-                    </Avatar>
+              </Avatar>
                     <div className="min-w-0 flex-1">
                       <div className="font-heading text-base sm:text-lg md:text-xl text-primary-navy truncate">{post.author}</div>
                       <div className="text-xs sm:text-sm md:text-base text-slate-500 font-subheading line-clamp-2">{post.title}</div>
@@ -449,8 +311,8 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
                 <div className="mb-4 sm:mb-6">
                   <p className="text-slate-700 font-subheading leading-relaxed text-sm sm:text-base">
                     {post.content.length > 200 ? `${post.content.substring(0, 200)}...` : post.content}
-                  </p>
-                </div>
+                </p>
+            </div>
 
                 {post.image && (
                   <div className="rounded-xl overflow-hidden border border-slate-100 mb-4 sm:mb-6">
@@ -460,15 +322,15 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
                         <h3 className="font-heading text-base sm:text-lg text-primary-navy mb-1 sm:mb-2">{post.imageTitle}</h3>
                         <p className="text-xs sm:text-sm md:text-base text-slate-600 font-subheading line-clamp-2">{post.imageDescription}</p>
                         <p className="text-xs sm:text-sm text-[#0056B3] mt-1 sm:mt-2 font-medium">{post.imageSource}</p>
-                      </div>
+          </div>
                     )}
-                  </div>
+              </div>
                 )}
 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
-                  <div className="flex items-center space-x-6 text-slate-500">
+                <div className="flex items-center space-x-6 text-slate-500">
                     <span className="text-xs sm:text-sm md:text-base font-subheading">{post.likes} likes • {post.commentsCount} comments</span>
-                  </div>
+            </div>
                   <div className="flex space-x-4 sm:space-x-6 justify-center sm:justify-end">
                     <Button 
                       variant="ghost" 
@@ -486,7 +348,7 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
                       <Heart className={`h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 transition-all duration-200 stroke-[2.5] ${
                         likedPosts.has(post.id) ? 'fill-red-500' : ''
                       }`} />
-                    </Button>
+                </Button>
                     <Button 
                       variant="ghost" 
                       size="lg" 
@@ -497,7 +359,7 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
                       }}
                     >
                       <MessageCircle className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 stroke-[2.5]" />
-                    </Button>
+                </Button>
                     <Button 
                       variant="ghost" 
                       size="lg" 
@@ -514,9 +376,9 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
                       <BookmarkIcon className={`h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 transition-all duration-200 stroke-[2.5] ${
                         savedPosts.has(post.id) ? 'fill-[#0056B3]' : ''
                       }`} />
-                    </Button>
-                  </div>
-                </div>
+                </Button>
+              </div>
+            </div>
               </div>
             </div>
           ))}
@@ -527,23 +389,24 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
               <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4 md:space-x-6">
                 <div className="bg-white/20 backdrop-blur-sm p-3 sm:p-4 rounded-xl self-center sm:self-start flex-shrink-0">
                   <span className="text-2xl sm:text-3xl">✨</span>
-                </div>
+            </div>
                 <div className="flex-1 text-center sm:text-left">
                   <h3 className="font-heading text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3">Welcome to the Community Feed!</h3>
                   <p className="text-white/80 font-subheading leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base md:text-lg">
                     Follow thousands of students and professionals. Share your journey, get advice, and discover opportunities that align with your goals.
                   </p>
-                  <Button 
-                    variant="secondary" 
-                    className="bg-white text-primary-navy hover:bg-primary-navy hover:text-white rounded-full font-subheading border border-white px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm md:text-base w-full sm:w-auto"
-                    onClick={() => setIsDialogOpen(true)}
-                  >
-                    Share Your Story
-                  </Button>
-                </div>
+                  <Link href="/create-post">
+                    <Button 
+                      variant="secondary" 
+                      className="bg-white text-primary-navy hover:bg-primary-navy hover:text-white rounded-full font-subheading border border-white px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm md:text-base w-full sm:w-auto"
+                    >
+                      Share Your Story
+                    </Button>
+                  </Link>
+            </div>
                 <Button variant="ghost" size="icon" className="text-white/70 hover:text-white hover:bg-white/10 h-8 w-8 sm:h-10 sm:w-10 self-end sm:self-start flex-shrink-0">
                   <X className="h-5 w-5 sm:h-6 sm:w-6" />
-                </Button>
+            </Button>
               </div>
             </div>
           </div>
@@ -651,7 +514,7 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
                       <span className="truncate">Copy link</span>
                     </Button>
                     <Button variant="outline" className="w-full justify-start space-x-1.5 h-9 sm:h-10 text-xs">
-                      <Link className="h-3 w-3" />
+                      <LinkIcon className="h-3 w-3" />
                       <span className="truncate">Share link</span>
                     </Button>
                     <Button variant="outline" className="w-full justify-start space-x-1.5 h-9 sm:h-10 text-xs">

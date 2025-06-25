@@ -317,19 +317,19 @@ export default function FreelancePage() {
     <div className="min-h-full">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-2 sm:py-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 space-y-4 sm:space-y-0">
-          <div>
+        <div>
             <h1 className="text-2xl sm:text-4xl font-heading text-primary-navy mb-1 sm:mb-2">Freelance Marketplace</h1>
             <p className="text-slate-600 font-subheading text-base sm:text-xl">Find work or hire talented professionals</p>
-          </div>
-          {activeTab === "freelancers" && (
-            <Link href="/jobs/freelance/post">
-              <Button className="bg-primary-navy hover:bg-slate-800 text-white rounded-full px-4 sm:px-6 py-2 sm:py-3 font-subheading text-sm sm:text-base">
-                <PlusCircle className="h-4 w-4 mr-2" />
-                Post a Project
-              </Button>
-            </Link>
-          )}
         </div>
+        {activeTab === "freelancers" && (
+        <Link href="/jobs/freelance/post">
+              <Button className="bg-primary-navy hover:bg-slate-800 text-white rounded-full px-4 sm:px-6 py-2 sm:py-3 font-subheading text-sm sm:text-base">
+            <PlusCircle className="h-4 w-4 mr-2" />
+            Post a Project
+          </Button>
+        </Link>
+        )}
+      </div>
 
         <Tabs value={activeTab} className="mb-6 sm:mb-8" onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2 mb-6 sm:mb-8 bg-slate-100 p-1 sm:p-2 rounded-xl sm:rounded-2xl">
@@ -337,19 +337,55 @@ export default function FreelancePage() {
               <Briefcase className="h-4 w-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">Gigs & Projects</span>
               <span className="sm:hidden">Gigs</span>
-            </TabsTrigger>
+          </TabsTrigger>
             <TabsTrigger value="freelancers" className="text-sm sm:text-base py-2 sm:py-3 font-subheading rounded-lg sm:rounded-xl data-[state=active]:bg-primary-navy data-[state=active]:text-white">
               <Users className="h-4 w-4 mr-1 sm:mr-2" />
               <span className="hidden sm:inline">Hire Freelancers</span>
               <span className="sm:hidden">Freelancers</span>
-            </TabsTrigger>
-          </TabsList>
+          </TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="gigs">
+        <TabsContent value="gigs">
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Enhanced Sidebar for Gigs */}
               <div className="w-full lg:w-64 lg:flex-shrink-0">
-                <div className="space-y-4 lg:space-y-6">
+                {/* Mobile: Horizontal small buttons */}
+                <div className="lg:hidden mb-4">
+                  <div className="flex space-x-2 overflow-x-auto pb-2">
+                    <Link href="/jobs/freelance/my-applications">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-lg font-subheading text-xs whitespace-nowrap px-3 py-1.5"
+                      >
+                        <CheckCircle className="h-3 w-3 mr-1" />
+                        Applied Projects
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setShowGigsFilters(!showGigsFilters)}
+                      className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-lg font-subheading text-xs whitespace-nowrap px-3 py-1.5"
+                    >
+                      <Filter className="h-3 w-3 mr-1" />
+                      Filters
+                    </Button>
+                    <Link href="/jobs/freelance/complete-profile">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-lg font-subheading text-xs whitespace-nowrap px-3 py-1.5"
+                      >
+                        <FileText className="h-3 w-3 mr-1" />
+                        Complete Profile
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Desktop: Card layout (unchanged) */}
+                <div className="hidden lg:block space-y-4 lg:space-y-6">
                   {/* Applied Projects */}
                   <Card className="border-slate-200 shadow-sm">
                     <CardHeader className="pb-3 sm:pb-4">
@@ -554,86 +590,145 @@ export default function FreelancePage() {
                     </CardContent>
                   </Card>
                 </div>
+                
+                {/* Mobile: Show filters panel when toggled */}
+                {showGigsFilters && (
+                  <div className="lg:hidden mb-4">
+                    <Card className="border-slate-200 shadow-sm">
+                      <CardHeader className="pb-3 sm:pb-4">
+                        <CardTitle className="text-lg font-heading text-primary-navy flex items-center">
+                          <Filter className="h-4 w-4 mr-2" />
+                          Filters
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {/* Project Type */}
+                        <div>
+                          <h4 className="font-subheading font-medium text-primary-navy mb-2 text-sm">Project Type</h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="fixed-price-mobile" />
+                              <label htmlFor="fixed-price-mobile" className="text-xs font-subheading text-slate-600">Fixed Price</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="hourly-mobile" />
+                              <label htmlFor="hourly-mobile" className="text-xs font-subheading text-slate-600">Hourly Rate</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="milestone-mobile" />
+                              <label htmlFor="milestone-mobile" className="text-xs font-subheading text-slate-600">Milestone Based</label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <Separator />
+
+                        {/* Budget Range */}
+                        <div>
+                          <h4 className="font-subheading font-medium text-primary-navy mb-2 text-sm">Budget Range</h4>
+                          <div className="px-2">
+                            <Slider
+                              value={projectBudgetRange}
+                              onValueChange={setProjectBudgetRange}
+                              max={10000}
+                              min={100}
+                              step={100}
+                              className="mb-3"
+                            />
+                            <div className="flex justify-between text-xs font-subheading text-slate-500">
+                              <span>${projectBudgetRange[0]}</span>
+                              <span>${projectBudgetRange[1]}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <Button className="w-full bg-primary-navy hover:bg-primary-navy/90 text-white rounded-lg font-subheading text-sm">
+                          Apply Filters
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
               </div>
 
               {/* Main Content Area */}
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6 sm:mb-8">
-                  <div className="relative flex-1">
+            <div className="relative flex-1">
                     <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-slate-400" />
                     <Input 
                       placeholder="Search projects by title, skills..."
                       className="pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 border-slate-200 focus:border-slate-400 focus:ring-slate-100 rounded-xl font-subheading text-sm sm:text-base"
                     />
-                  </div>
-                  <Select>
+            </div>
+            <Select>
                     <SelectTrigger className="w-full sm:w-[180px] border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading focus:ring-0 focus:outline-none text-sm sm:text-base">
                       <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent className="border-primary-navy">
+              </SelectTrigger>
+              <SelectContent className="border-primary-navy">
                       <SelectItem value="newest" className="focus:bg-primary-navy focus:text-white">Newest First</SelectItem>
                       <SelectItem value="budget-high" className="focus:bg-primary-navy focus:text-white">Highest Budget</SelectItem>
                       <SelectItem value="budget-low" className="focus:bg-primary-navy focus:text-white">Lowest Budget</SelectItem>
                       <SelectItem value="deadline" className="focus:bg-primary-navy focus:text-white">Deadline</SelectItem>
                       <SelectItem value="applications" className="focus:bg-primary-navy focus:text-white">Fewest Applications</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              </SelectContent>
+            </Select>
+          </div>
 
                 <div className="space-y-3 sm:space-y-4">
-                  {projects.map((project) => {
-                    const IconComponent = project.icon
-                    return (
-                      <Card 
-                        key={project.id}
+            {projects.map((project) => {
+              const IconComponent = project.icon
+              return (
+                <Card 
+                  key={project.id}
                         className="border-0 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl sm:rounded-2xl bg-white cursor-pointer overflow-hidden"
-                        onClick={() => handleProjectClick(project)}
-                      >
+                  onClick={() => handleProjectClick(project)}
+                >
                         <CardContent className="p-4 sm:p-6 lg:p-8 overflow-hidden">
                           <div className="flex items-start w-full">
                             <div className="flex-1 min-w-0 w-full">
                               <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-3 sm:mb-4">
                                 <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl bg-slate-100 flex items-center justify-center flex-shrink-0">
                                   <IconComponent className="h-6 w-6 sm:h-8 sm:w-8 text-primary-navy" />
-                                </div>
+                          </div>
                                 <div className="flex-1 min-w-0 w-full">
                                   <h3 className="font-heading text-lg sm:text-xl text-primary-navy truncate w-full">{project.title}</h3>
                                   <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3 mt-1 sm:mt-2">
                                     <p className="text-sm sm:text-base text-slate-600 font-subheading truncate">{project.budget}</p>
                                     <span className="text-xs sm:text-sm bg-[#0056B3]/10 text-[#0056B3] px-2 sm:px-3 py-1 rounded-full font-medium self-start flex-shrink-0">{project.category}</span>
-                                  </div>
-                                </div>
-                              </div>
+                      </div>
+                    </div>
+                  </div>
                               <div className="text-slate-600 font-subheading leading-relaxed mb-4 sm:mb-5 text-sm sm:text-base overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
-                                {project.description}
+                          {project.description}
                               </div>
                               <div className="flex flex-wrap gap-1 sm:gap-2 mb-4 sm:mb-5 overflow-hidden">
-                                {project.skills.map((skill, index) => (
+                          {project.skills.map((skill, index) => (
                                   <span key={index} className="text-xs sm:text-sm bg-slate-100 text-slate-700 px-2 sm:px-3 py-1 rounded-full font-medium flex-shrink-0">{skill}</span>
-                                ))}
-                              </div>
+                          ))}
+                  </div>
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0 w-full">
                                 <p className="text-xs sm:text-sm text-slate-500 font-subheading truncate flex-1 min-w-0">Estimated duration: {project.duration} • Posted {project.postedDate}</p>
                                 <div className="flex space-x-2 sm:space-x-3 flex-shrink-0">
                                   <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 text-slate-400 hover:text-primary-navy hover:bg-slate-50">
                                     <BookmarkIcon className="h-3 w-3 sm:h-4 sm:w-4" />
-                                  </Button>
-                                  <Button 
-                                    size="sm" 
+                      </Button>
+                            <Button 
+                              size="sm" 
                                     className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg px-3 sm:px-4 font-subheading text-xs sm:text-sm"
-                                    onClick={(e) => handleApplyClick(e, project)}
-                                  >
-                                    Apply
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
+                              onClick={(e) => handleApplyClick(e, project)}
+                            >
+                              Apply
+                            </Button>
                           </div>
-                        </CardContent>
-                      </Card>
-                    )
-                  })}
-                </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )
+            })}
+                  </div>
 
                 <div className="mt-6 sm:mt-8 flex justify-center">
                   <Button variant="outline" className="rounded-full border-slate-200 text-slate-600 hover:border-primary-navy hover:text-primary-navy font-subheading px-4 sm:px-6 text-sm sm:text-base">
@@ -642,13 +737,39 @@ export default function FreelancePage() {
                 </div>
               </div>
             </div>
-          </TabsContent>
+        </TabsContent>
 
-                    <TabsContent value="freelancers">
+        <TabsContent value="freelancers">
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
               {/* Enhanced Sidebar */}
               <div className="w-full lg:w-64 lg:flex-shrink-0">
-                <div className="space-y-4 lg:space-y-6">
+                {/* Mobile: Horizontal small buttons */}
+                <div className="lg:hidden mb-4">
+                  <div className="flex space-x-2 overflow-x-auto pb-2">
+                    <Link href="/jobs/freelance/my-projects">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-lg font-subheading text-xs whitespace-nowrap px-3 py-1.5"
+                      >
+                        <FolderOpen className="h-3 w-3 mr-1" />
+                        Posted Projects
+                      </Button>
+                    </Link>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setShowFilters(!showFilters)}
+                      className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-lg font-subheading text-xs whitespace-nowrap px-3 py-1.5"
+                    >
+                      <Filter className="h-3 w-3 mr-1" />
+                      Filters
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Desktop: Card layout (unchanged) */}
+                <div className="hidden lg:block space-y-4 lg:space-y-6">
                   {/* Posted Projects */}
                   <Card className="border-slate-200 shadow-sm">
                     <CardHeader className="pb-3 sm:pb-4">
@@ -706,16 +827,16 @@ export default function FreelancePage() {
                             <div className="flex items-center space-x-2">
                               <Checkbox id="entry" />
                               <label htmlFor="entry" className="text-xs sm:text-sm font-subheading text-slate-600">Entry Level</label>
-                            </div>
+                    </div>
                             <div className="flex items-center space-x-2">
                               <Checkbox id="intermediate" />
                               <label htmlFor="intermediate" className="text-xs sm:text-sm font-subheading text-slate-600">Intermediate</label>
-                            </div>
+                  </div>
                             <div className="flex items-center space-x-2">
                               <Checkbox id="expert" />
                               <label htmlFor="expert" className="text-xs sm:text-sm font-subheading text-slate-600">Expert</label>
-                            </div>
-                          </div>
+                    </div>
+                  </div>
                         </div>
 
                         <Separator />
@@ -735,14 +856,14 @@ export default function FreelancePage() {
                             <div className="flex justify-between text-xs sm:text-sm font-subheading text-slate-500">
                               <span>${budgetRange[0]}/hr</span>
                               <span>${budgetRange[1]}/hr</span>
-                            </div>
-                          </div>
-                        </div>
+                </div>
+              </div>
+            </div>
 
                         <Separator />
 
                         {/* Location */}
-                        <div>
+                    <div>
                           <h4 className="font-subheading font-medium text-primary-navy mb-2 sm:mb-3 text-sm sm:text-base">Location</h4>
                           <div className="space-y-2">
                             <div className="flex items-center space-x-2">
@@ -757,12 +878,12 @@ export default function FreelancePage() {
                               <Checkbox id="eu" />
                               <label htmlFor="eu" className="text-xs sm:text-sm font-subheading text-slate-600">Europe</label>
                             </div>
-                            <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2">
                               <Checkbox id="timezone" />
                               <label htmlFor="timezone" className="text-xs sm:text-sm font-subheading text-slate-600">My Timezone</label>
-                            </div>
-                          </div>
-                        </div>
+                      </div>
+                    </div>
+                  </div>
 
                         <Separator />
 
@@ -777,13 +898,13 @@ export default function FreelancePage() {
                             <div className="flex items-center space-x-2">
                               <Checkbox id="week" />
                               <label htmlFor="week" className="text-xs sm:text-sm font-subheading text-slate-600">Within a Week</label>
-                            </div>
+                  </div>
                             <div className="flex items-center space-x-2">
                               <Checkbox id="month" />
                               <label htmlFor="month" className="text-xs sm:text-sm font-subheading text-slate-600">Within a Month</label>
-                            </div>
-                          </div>
-                        </div>
+                    </div>
+                  </div>
+                </div>
 
                         <Separator />
 
@@ -806,9 +927,9 @@ export default function FreelancePage() {
                             <div className="flex items-center space-x-2">
                               <Checkbox id="design" />
                               <label htmlFor="design" className="text-xs sm:text-sm font-subheading text-slate-600">UI/UX Design</label>
-                            </div>
-                          </div>
-                        </div>
+              </div>
+            </div>
+          </div>
 
                         <Button className="w-full bg-primary-navy hover:bg-primary-navy/90 text-white rounded-lg font-subheading text-sm sm:text-base">
                           Apply Filters
@@ -816,47 +937,104 @@ export default function FreelancePage() {
                       </CardContent>
                     )}
                   </Card>
-
-
                 </div>
+                
+                {/* Mobile: Show filters panel when toggled */}
+                {showFilters && (
+                  <div className="lg:hidden mb-4">
+                    <Card className="border-slate-200 shadow-sm">
+                      <CardHeader className="pb-3 sm:pb-4">
+                        <CardTitle className="text-lg font-heading text-primary-navy flex items-center">
+                          <Filter className="h-4 w-4 mr-2" />
+                          Filters
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {/* Experience Level */}
+                        <div>
+                          <h4 className="font-subheading font-medium text-primary-navy mb-2 text-sm">Experience Level</h4>
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="entry-mobile" />
+                              <label htmlFor="entry-mobile" className="text-xs font-subheading text-slate-600">Entry Level</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="intermediate-mobile" />
+                              <label htmlFor="intermediate-mobile" className="text-xs font-subheading text-slate-600">Intermediate</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Checkbox id="expert-mobile" />
+                              <label htmlFor="expert-mobile" className="text-xs font-subheading text-slate-600">Expert</label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <Separator />
+
+                        {/* Hourly Rate */}
+                        <div>
+                          <h4 className="font-subheading font-medium text-primary-navy mb-2 text-sm">Hourly Rate Range</h4>
+                          <div className="px-2">
+                            <Slider
+                              value={budgetRange}
+                              onValueChange={setBudgetRange}
+                              max={200}
+                              min={10}
+                              step={5}
+                              className="mb-3"
+                            />
+                            <div className="flex justify-between text-xs font-subheading text-slate-500">
+                              <span>${budgetRange[0]}/hr</span>
+                              <span>${budgetRange[1]}/hr</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <Button className="w-full bg-primary-navy hover:bg-primary-navy/90 text-white rounded-lg font-subheading text-sm">
+                          Apply Filters
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
               </div>
 
               {/* Main Content Area */}
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 mb-6 sm:mb-8">
-                  <div className="relative flex-1">
+            <div className="relative flex-1">
                     <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-slate-400" />
                     <Input 
                       placeholder="Search freelancers by name, skills..."
                       className="pl-10 sm:pl-12 pr-3 sm:pr-4 py-2 sm:py-3 border-slate-200 focus:border-slate-400 focus:ring-slate-100 rounded-xl font-subheading text-sm sm:text-base"
                     />
-                  </div>
-                  <Select>
+            </div>
+            <Select>
                     <SelectTrigger className="w-full sm:w-[180px] border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading focus:ring-0 focus:outline-none text-sm sm:text-base">
                       <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent className="border-primary-navy">
+              </SelectTrigger>
+              <SelectContent className="border-primary-navy">
                       <SelectItem value="rating" className="focus:bg-primary-navy focus:text-white">Highest Rating</SelectItem>
                       <SelectItem value="reviews" className="focus:bg-primary-navy focus:text-white">Most Reviews</SelectItem>
                       <SelectItem value="recent" className="focus:bg-primary-navy focus:text-white">Recently Active</SelectItem>
                       <SelectItem value="price-low" className="focus:bg-primary-navy focus:text-white">Price: Low to High</SelectItem>
                       <SelectItem value="price-high" className="focus:bg-primary-navy focus:text-white">Price: High to Low</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+              </SelectContent>
+            </Select>
+          </div>
 
                 <div className="space-y-3 sm:space-y-4">
-                  {freelancers.map((freelancer) => (
-                    <Card 
-                      key={freelancer.id}
+            {freelancers.map((freelancer) => (
+              <Card 
+                key={freelancer.id}
                       className="border-0 shadow-sm hover:shadow-md transition-all duration-200 rounded-xl sm:rounded-2xl bg-white cursor-pointer overflow-hidden"
-                      onClick={() => handleFreelancerClick(freelancer)}
-                    >
+                onClick={() => handleFreelancerClick(freelancer)}
+              >
                       <CardContent className="p-4 sm:p-6 lg:p-8 overflow-hidden">
                         <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-6 w-full">
                           <div className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary-navy to-slate-700 flex items-center justify-center text-white text-xl sm:text-2xl lg:text-3xl font-heading flex-shrink-0 mx-auto sm:mx-0">
-                            {freelancer.initials}
-                          </div>
+                      {freelancer.initials}
+                    </div>
                           <div className="flex-1 min-w-0 w-full">
                             <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-2 sm:mb-3 space-y-2 sm:space-y-0">
                               <h3 className="font-heading text-lg sm:text-xl lg:text-2xl text-primary-navy truncate flex-1 min-w-0">{freelancer.name}</h3>
@@ -864,48 +1042,48 @@ export default function FreelancePage() {
                                 <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-amber-400 text-amber-400" />
                                 <span className="font-subheading font-medium text-primary-navy text-sm sm:text-base">{freelancer.rating}</span>
                                 <span className="text-slate-500 text-xs sm:text-base font-subheading whitespace-nowrap">/5 ({freelancer.reviews} reviews)</span>
-                              </div>
-                            </div>
+                        </div>
+                      </div>
                             <div className="font-subheading text-slate-600 mb-3 sm:mb-4 text-base sm:text-lg text-center sm:text-left overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                              {freelancer.title}
+                        {freelancer.title}
                             </div>
                             <div className="text-slate-600 font-subheading leading-relaxed mb-4 sm:mb-5 text-sm sm:text-base text-center sm:text-left overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
-                              {freelancer.shortBio}
+                        {freelancer.shortBio}
                             </div>
                             <div className="flex flex-wrap gap-1 sm:gap-2 mb-4 sm:mb-5 justify-center sm:justify-start overflow-hidden">
-                              {freelancer.skills.map((skill, index) => (
+                        {freelancer.skills.map((skill, index) => (
                                 <Badge key={index} className="bg-slate-100 text-slate-700 font-subheading text-xs sm:text-sm px-2 sm:px-3 py-1 flex-shrink-0">{skill}</Badge>
-                              ))}
-                            </div>
+                        ))}
+                      </div>
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0 w-full">
                               <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 lg:space-x-4 flex-1 min-w-0">
                                 <div className="flex items-center text-primary-navy flex-shrink-0">
                                   <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 mr-1" />
                                   <span className="font-heading text-lg sm:text-xl">${freelancer.rate}/hr</span>
-                                </div>
+                          </div>
                                 <div className="flex items-center text-slate-500 flex-shrink-0">
                                   <Clock className="h-4 w-4 sm:h-5 sm:w-5 mr-1" />
                                   <span className="text-sm sm:text-base font-subheading truncate">{freelancer.availability}</span>
-                                </div>
+                          </div>
                                 <div className="flex items-center text-slate-500 flex-shrink-0">
                                   <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-1" />
                                   <span className="text-sm sm:text-base font-subheading truncate">{freelancer.location}</span>
-                                </div>
-                              </div>
-                              <Button 
-                                size="sm" 
-                                className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg px-4 sm:px-6 font-subheading text-sm sm:text-base flex-shrink-0"
-                                onClick={(e) => handleContactClick(e, freelancer)}
-                              >
-                                Contact
-                              </Button>
-                            </div>
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                        <Button 
+                          size="sm" 
+                                className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg px-4 sm:px-6 font-subheading text-sm sm:text-base flex-shrink-0"
+                          onClick={(e) => handleContactClick(e, freelancer)}
+                        >
+                          Contact
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
                 <div className="mt-6 sm:mt-8 flex justify-center">
                   <Button variant="outline" className="rounded-full border-slate-200 text-slate-600 hover:border-primary-navy hover:text-primary-navy font-subheading px-4 sm:px-6 text-sm sm:text-base">
@@ -1268,7 +1446,7 @@ export default function FreelancePage() {
                         <Clock className="h-4 w-4 mr-1" />
                         <span>{selectedFreelancer.availability}</span>
                       </div>
-                      <div className="flex items-center">
+                    <div className="flex items-center">
                         <DollarSign className="h-4 w-4 mr-1" />
                         <span className="font-heading text-primary-navy">${selectedFreelancer.rate}/hr</span>
                       </div>
