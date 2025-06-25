@@ -90,4 +90,9 @@
   .text-primary-navy {
     color: hsl(var(--primary-navy));
   }
+
+  /* Safe area utilities for mobile devices */
+  .safe-area-pb {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
 }
