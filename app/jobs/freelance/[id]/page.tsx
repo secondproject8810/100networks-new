@@ -5,24 +5,17 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { BookmarkIcon, ArrowLeft, Star, Upload, Send, Briefcase, Users, Search } from "lucide-react"
+import { BookmarkIcon, ArrowLeft, Star, Briefcase, Users, Search } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 
-export default function ProjectDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+export default function ProjectDetailsPage() {
+  const params = useParams()
   const router = useRouter()
   const [project, setProject] = useState<any>(null)
-  const [showApplyModal, setShowApplyModal] = useState(false)
-  const [applicationData, setApplicationData] = useState({
-    coverLetter: "",
-    proposedRate: "",
-    timeline: "",
-    portfolio: null
-  })
+
 
   // Mock projects data (in a real app, this would come from an API)
   const projects = [
@@ -109,21 +102,12 @@ export default function ProjectDetailsPage({ params }: { params: Promise<{ id: s
   ]
 
   useEffect(() => {
-    const loadProject = async () => {
-      const resolvedParams = await params
-      const projectId = parseInt(resolvedParams.id as string)
-      const foundProject = projects.find(p => p.id === projectId)
-      setProject(foundProject)
-    }
-    loadProject()
-  }, [params])
+    const projectId = parseInt(params.id as string)
+    const foundProject = projects.find(p => p.id === projectId)
+    setProject(foundProject)
+  }, [params.id])
 
-  const handleSubmitApplication = () => {
-    // Handle application submission logic here
-    console.log("Application submitted:", { project: project?.title, ...applicationData })
-    setShowApplyModal(false)
-    setApplicationData({ coverLetter: "", proposedRate: "", timeline: "", portfolio: null })
-  }
+
 
   if (!project) {
     return (
@@ -326,12 +310,13 @@ export default function ProjectDetailsPage({ params }: { params: Promise<{ id: s
 
               {/* Action Buttons */}
               <div className="flex space-x-4 pt-4">
-                <Button 
-                  className="flex-1 bg-primary-navy hover:bg-slate-800 text-white rounded-xl font-subheading"
-                  onClick={() => setShowApplyModal(true)}
-                >
-                  Apply to Project
-                </Button>
+                <Link href={`/jobs/freelance/${project.id}/apply`}>
+                  <Button 
+                    className="flex-1 bg-primary-navy hover:bg-slate-800 text-white rounded-xl font-subheading w-full"
+                  >
+                    Apply to Project
+                  </Button>
+                </Link>
                 <Button variant="outline" className="rounded-xl font-subheading">
                   <BookmarkIcon className="h-4 w-4 mr-2" />
                   Save Project
@@ -340,82 +325,7 @@ export default function ProjectDetailsPage({ params }: { params: Promise<{ id: s
         </div>
       </div>
 
-      {/* Apply Modal */}
-      <Dialog open={showApplyModal} onOpenChange={setShowApplyModal}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-primary-navy">
-              Apply to: {project?.title}
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-6 mt-4">
-            {/* Cover Letter */}
-            <div>
-              <Label htmlFor="coverLetter" className="font-subheading text-primary-navy">Cover Letter</Label>
-              <Textarea
-                id="coverLetter"
-                placeholder="Explain why you're the perfect fit for this project..."
-                value={applicationData.coverLetter}
-                onChange={(e) => setApplicationData({...applicationData, coverLetter: e.target.value})}
-                className="mt-2 min-h-[120px] rounded-xl font-subheading"
-              />
-            </div>
 
-            {/* Proposed Rate */}
-            <div>
-              <Label htmlFor="proposedRate" className="font-subheading text-primary-navy">Your Proposed Rate</Label>
-              <Input
-                id="proposedRate"
-                placeholder="Enter your rate (e.g., $50/hour or $2000 fixed)"
-                value={applicationData.proposedRate}
-                onChange={(e) => setApplicationData({...applicationData, proposedRate: e.target.value})}
-                className="mt-2 rounded-xl font-subheading"
-              />
-            </div>
-
-            {/* Timeline */}
-            <div>
-              <Label htmlFor="timeline" className="font-subheading text-primary-navy">Estimated Timeline</Label>
-              <Input
-                id="timeline"
-                placeholder="How long will this project take you to complete?"
-                value={applicationData.timeline}
-                onChange={(e) => setApplicationData({...applicationData, timeline: e.target.value})}
-                className="mt-2 rounded-xl font-subheading"
-              />
-            </div>
-
-            {/* Portfolio Upload */}
-            <div>
-              <Label className="font-subheading text-primary-navy">Portfolio/Samples (Optional)</Label>
-              <div className="mt-2 border-2 border-dashed border-slate-300 rounded-xl p-6 text-center">
-                <Upload className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-                <p className="text-sm font-subheading text-slate-500">Upload relevant work samples or portfolio</p>
-                <p className="text-xs text-slate-400 mt-1">Max 10MB per file</p>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex space-x-3 pt-4">
-              <Button 
-                onClick={handleSubmitApplication}
-                className="flex-1 bg-primary-navy hover:bg-slate-800 text-white rounded-xl font-subheading"
-              >
-                <Send className="h-4 w-4 mr-2" />
-                Submit Application
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => setShowApplyModal(false)}
-                className="rounded-xl font-subheading"
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 } 

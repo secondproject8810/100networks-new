@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BookmarkIcon, Search, Briefcase, Users, PlusCircle, Filter, FolderOpen, Star, Clock, DollarSign, MapPin, Users2, Calendar, ChevronRight, FileText, CheckCircle, X, ArrowLeft, Send, MessageCircle } from "lucide-react"
+import { BookmarkIcon, Search, Briefcase, Users, PlusCircle, Filter, FolderOpen, Star, Clock, DollarSign, MapPin, Users2, Calendar, ChevronRight, FileText, CheckCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -34,14 +34,7 @@ export default function FreelancePage() {
   const [selectedProject, setSelectedProject] = useState<any>(null)
 
 
-  const [selectedFreelancer, setSelectedFreelancer] = useState<any>(null)
-  const [showMessageModal, setShowMessageModal] = useState(false)
-  const [messageData, setMessageData] = useState({
-    subject: "",
-    message: "",
-    projectBudget: "",
-    timeline: ""
-  })
+
 
   const projects = [
     {
@@ -287,22 +280,11 @@ export default function FreelancePage() {
 
   const handleContactClick = (e: any, freelancer: any) => {
     e.stopPropagation()
-    setSelectedFreelancer(freelancer)
-    setShowMessageModal(true)
+    e.preventDefault()
+    router.push(`/jobs/freelance/freelancer/${freelancer.id}/message`)
   }
 
-  const handleSendMessage = () => {
-    // Handle message sending here - this would integrate with your messaging system
-    console.log("Sending message to:", selectedFreelancer.name, messageData)
-    setShowMessageModal(false)
-    setSelectedFreelancer(null)
-    setMessageData({
-      subject: "",
-      message: "",
-      projectBudget: "",
-      timeline: ""
-    })
-  }
+
 
   return (
     <div className="min-h-full">
@@ -1121,146 +1103,7 @@ export default function FreelancePage() {
 
 
 
-      {/* Message Modal */}
-      {showMessageModal && selectedFreelancer && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setShowMessageModal(false)}
-                    className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading"
-                  >
-                    <ArrowLeft className="h-5 w-5" />
-                  </Button>
-                  <div>
-                    <h1 className="text-xl font-heading text-primary-navy">Contact {selectedFreelancer.name}</h1>
-                    <p className="text-sm font-subheading text-slate-600">Send a message to start the conversation</p>
-                  </div>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowMessageModal(false)}
-                  className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading"
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-              </div>
 
-              {/* Message Form */}
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-heading text-primary-navy mb-2">Subject</label>
-                  <Input
-                    placeholder="Project inquiry - [Brief description]"
-                    value={messageData.subject}
-                    onChange={(e) => setMessageData({ ...messageData, subject: e.target.value })}
-                    className="rounded-xl font-subheading"
-                  />
-            </div>
-
-                <div>
-                  <label className="block text-sm font-heading text-primary-navy mb-2">Message</label>
-                  <textarea
-                    placeholder={`Hi ${selectedFreelancer.name}, I'm interested in working with you on a project. Here's what I need help with...`}
-                    value={messageData.message}
-                    onChange={(e) => setMessageData({ ...messageData, message: e.target.value })}
-                    rows={6}
-                    className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-navy focus:border-transparent font-subheading"
-                  />
-                    </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-heading text-primary-navy mb-2">Project Budget (Optional)</label>
-                    <Input
-                      placeholder="$5,000 - $10,000"
-                      value={messageData.projectBudget}
-                      onChange={(e) => setMessageData({ ...messageData, projectBudget: e.target.value })}
-                      className="rounded-xl font-subheading"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-heading text-primary-navy mb-2">Timeline (Optional)</label>
-                    <Input
-                      placeholder="2-4 weeks"
-                      value={messageData.timeline}
-                      onChange={(e) => setMessageData({ ...messageData, timeline: e.target.value })}
-                      className="rounded-xl font-subheading"
-                    />
-                  </div>
-                </div>
-
-                {/* Quick Templates */}
-                <div>
-                  <h4 className="text-sm font-heading text-primary-navy mb-3">Quick Templates</h4>
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs font-subheading"
-                      onClick={() => setMessageData({
-                        ...messageData,
-                        subject: "Web Development Project Inquiry",
-                        message: `Hi ${selectedFreelancer.name}, I came across your profile and I'm impressed by your expertise in ${selectedFreelancer.skills.slice(0, 3).join(', ')}. I have a web development project that I'd like to discuss with you. Would you be available for a quick call to go over the details?`
-                      })}
-                    >
-                      Web Development
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs font-subheading"
-                      onClick={() => setMessageData({
-                        ...messageData,
-                        subject: "Design Project Collaboration",
-                        message: `Hello ${selectedFreelancer.name}, I'm looking for a talented designer to help with my project. Your portfolio looks amazing and I think you'd be a great fit. I'd love to discuss the project details with you.`
-                      })}
-                    >
-                      Design Work
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-xs font-subheading"
-                      onClick={() => setMessageData({
-                        ...messageData,
-                        subject: "Long-term Partnership Opportunity",
-                        message: `Hi ${selectedFreelancer.name}, I'm looking for a reliable freelancer for ongoing projects. Based on your experience and excellent reviews, I think we could have a great working relationship. Let's connect!`
-                      })}
-                    >
-                      Long-term
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex space-x-4 pt-4">
-                  <Button 
-                    className="flex-1 bg-primary-navy hover:bg-slate-800 text-white rounded-xl font-subheading"
-                    onClick={handleSendMessage}
-                  >
-                    <Send className="h-4 w-4 mr-2" />
-                    Send Message
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading"
-                    onClick={() => setShowMessageModal(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
-      )}
     </div>
   )
 }
