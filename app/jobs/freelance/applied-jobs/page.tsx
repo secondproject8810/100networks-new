@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+
 import {
   ArrowLeft,
   Building,
@@ -39,7 +40,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function AppliedJobsPage() {
-  const [selectedJobDetails, setSelectedJobDetails] = useState<any>(null)
+
   const [showMessageModal, setShowMessageModal] = useState(false)
   const [selectedClientForMessage, setSelectedClientForMessage] = useState<any>(null)
   const [messageText, setMessageText] = useState("")
@@ -182,73 +183,7 @@ export default function AppliedJobsPage() {
   ]
 
   const handleViewJobDetails = (application: any) => {
-    // Determine if this is a freelance project or job application
-    const isFreelanceProject = application.projectTitle && application.clientName;
-    const budgetType = application.budgetType || application.salaryType || "project";
-    
-    // Convert application data to job details format
-    const jobDetails = {
-      title: isFreelanceProject ? application.projectTitle : application.jobTitle,
-      company: isFreelanceProject ? application.clientName : application.companyName,
-      logo: "/placeholder-company-logo.png",
-      location: isFreelanceProject ? application.clientLocation : application.location,
-      salary: isFreelanceProject ? application.budget : application.salary,
-      type: budgetType,
-      remote: "Remote", // Default for freelance projects
-      posted: isFreelanceProject ? application.projectPosted : application.jobPosted,
-      description: isFreelanceProject ? application.proposal : application.coverLetter,
-      fullDescription: `${isFreelanceProject ? application.proposal : application.coverLetter} This is a ${budgetType.toLowerCase()} ${isFreelanceProject ? 'project' : 'position'}${application.estimatedDuration ? ` with an estimated duration of ${application.estimatedDuration}` : ''}. ${isFreelanceProject ? 'The project' : 'The job'} was posted ${isFreelanceProject ? application.projectPosted : application.jobPosted} and has attracted ${application.totalApplicants} applicants.`,
-      skills: application.skills,
-      requirements: [
-        "Strong experience with the required technologies",
-        "Ability to work independently and meet deadlines",
-        "Excellent communication skills",
-        "Portfolio showcasing relevant projects"
-      ],
-      responsibilities: [
-        "Deliver high-quality work according to specifications",
-        "Communicate progress regularly with the client",
-        "Meet all project milestones and deadlines",
-        "Provide documentation and support as needed"
-      ],
-      companyInfo: {
-        name: isFreelanceProject ? application.clientName : application.companyName,
-        size: "Small Business",
-        industry: "Technology",
-        founded: "2020",
-        description: `${isFreelanceProject ? application.clientName : application.companyName} is a growing company looking for talented ${isFreelanceProject ? 'freelancers' : 'employees'} to help with their ${isFreelanceProject ? 'projects' : 'business goals'}.`,
-        benefits: ["Remote Work", "Flexible Hours", "Direct Communication", "Quick Payments"],
-        culture: "Collaborative and results-focused environment"
-      },
-      applicationDeadline: "Open",
-      hiringManager: isFreelanceProject ? application.clientName : application.companyName,
-      // Add application status
-      applicationStatus: application.status,
-      applicationStatusText: getStatusText(application.status),
-      appliedDate: application.appliedDate,
-      lastActivity: application.lastActivity,
-      // Add contract details for hired positions
-      contractDetails: application.status === "hired" ? {
-        agreedRate: application.contractDetails?.agreedRate || application.salary,
-        paymentStructure: application.contractDetails?.paymentStructure || "Monthly",
-        totalProjectValue: application.contractDetails?.totalProjectValue || application.salary,
-        milestones: application.contractDetails?.milestones || [],
-        paymentTerms: application.contractDetails?.paymentTerms || "Net 30",
-        workSchedule: application.contractDetails?.workSchedule || "Full-time",
-        communicationMethod: application.contractDetails?.communicationMethod || "Email + Weekly calls",
-        contractStartDate: application.contractDetails?.contractStartDate || application.startDate,
-        contractEndDate: application.contractDetails?.contractEndDate || "Ongoing",
-        termsAndConditions: application.contractDetails?.termsAndConditions || [
-          "Standard employment terms apply",
-          "Confidentiality agreement required",
-          "Non-compete clause for 12 months",
-          "Intellectual property rights assigned to company"
-        ],
-        clientRequirements: application.contractDetails?.clientRequirements || [],
-        deliverables: application.contractDetails?.deliverables || []
-      } : null
-    }
-    setSelectedJobDetails(jobDetails)
+    window.location.href = `/jobs/freelance/applied-jobs/${application.id}`
   }
 
   const handleMessageClient = (application: any) => {
@@ -518,186 +453,7 @@ export default function AppliedJobsPage() {
           ))}
         </div>
 
-        {/* Job Details Modal */}
-        <Dialog open={!!selectedJobDetails} onOpenChange={() => setSelectedJobDetails(null)}>
-          <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[95vh] lg:max-h-[90vh] overflow-y-auto mx-2">
-            {selectedJobDetails && (
-              <div className="space-y-4 lg:space-y-6">
-                {/* Header */}
-                <div className="flex flex-col space-y-4">
-                  <div className="flex items-start justify-between">
-                    <DialogTitle className="text-xl lg:text-2xl font-heading text-primary-navy pr-4">{selectedJobDetails.title}</DialogTitle>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setSelectedJobDetails(null)}
-                      className="rounded-xl flex-shrink-0"
-                    >
-                      <X className="h-5 w-5" />
-                    </Button>
-                  </div>
-                  
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-8 w-8 flex-shrink-0">
-                        <AvatarFallback className="bg-gradient-to-br from-slate-600 to-slate-800 text-white font-heading text-sm">
-                          {selectedJobDetails.company.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="min-w-0">
-                        <p className="font-subheading font-medium text-primary-navy">{selectedJobDetails.company}</p>
-                        <div className="flex items-center space-x-1">
-                          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                          <span className="text-xs font-subheading text-slate-500">4.8</span>
-                        </div>
-                      </div>
-                    </div>
-                    <Badge className={`${getStatusColor(selectedJobDetails.applicationStatus)} font-subheading flex items-center space-x-1 text-xs w-fit`}>
-                      {getStatusIcon(selectedJobDetails.applicationStatus)}
-                      <span>{selectedJobDetails.applicationStatusText}</span>
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Job Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-sm text-slate-500">
-                  <div className="flex items-center">
-                    <DollarSign className="h-4 w-4 mr-1 flex-shrink-0" />
-                    <span className="font-subheading">{selectedJobDetails.salary}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-1 flex-shrink-0" />
-                    <span className="font-subheading">Applied {selectedJobDetails.appliedDate}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
-                    <span className="font-subheading">{selectedJobDetails.location}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1 flex-shrink-0" />
-                    <span className="font-subheading">{selectedJobDetails.type}</span>
-                  </div>
-                </div>
-
-                {/* Description */}
-                <div>
-                  <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-2">Description</h3>
-                  <p className="text-slate-600 font-subheading text-sm lg:text-base leading-relaxed">{selectedJobDetails.fullDescription}</p>
-                </div>
-
-                {/* Contract Details for Hired Positions */}
-                {selectedJobDetails.applicationStatus === "hired" && selectedJobDetails.contractDetails && (
-                  <div className="space-y-4 lg:space-y-6 border-t border-slate-100 pt-4 lg:pt-6">
-                    <h3 className="text-base lg:text-lg font-heading text-primary-navy">Employment Details</h3>
-                    
-                    {/* Contract Overview */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
-                      <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                        <p className="text-xs lg:text-sm text-slate-500 font-subheading">Salary</p>
-                        <p className="text-base lg:text-lg font-heading text-primary-navy">{selectedJobDetails.contractDetails.agreedRate}</p>
-                      </div>
-                      <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                        <p className="text-xs lg:text-sm text-slate-500 font-subheading">Payment Schedule</p>
-                        <p className="text-base lg:text-lg font-heading text-primary-navy">{selectedJobDetails.contractDetails.paymentStructure}</p>
-                      </div>
-                      <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                        <p className="text-xs lg:text-sm text-slate-500 font-subheading">Start Date</p>
-                        <p className="text-base lg:text-lg font-heading text-primary-navy">{selectedJobDetails.contractDetails.contractStartDate}</p>
-                      </div>
-                      <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                        <p className="text-xs lg:text-sm text-slate-500 font-subheading">Work Schedule</p>
-                        <p className="text-base lg:text-lg font-heading text-primary-navy">{selectedJobDetails.contractDetails.workSchedule}</p>
-                      </div>
-                    </div>
-
-                    {/* Employment Terms */}
-                    <div>
-                      <h4 className="text-sm lg:text-md font-heading text-primary-navy mb-3">Employment Terms</h4>
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-                        <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                          <h5 className="font-subheading text-primary-navy mb-2 text-sm lg:text-base">Benefits</h5>
-                          <ul className="list-disc list-inside space-y-1 lg:space-y-2 text-slate-600 text-sm">
-                            <li className="font-subheading">Health Insurance</li>
-                            <li className="font-subheading">Dental & Vision Coverage</li>
-                            <li className="font-subheading">401(k) with Company Match</li>
-                            <li className="font-subheading">Paid Time Off</li>
-                            <li className="font-subheading">Professional Development</li>
-                          </ul>
-                        </div>
-                        <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                          <h5 className="font-subheading text-primary-navy mb-2 text-sm lg:text-base">Terms & Conditions</h5>
-                          <ul className="list-disc list-inside space-y-1 lg:space-y-2 text-slate-600 text-sm">
-                            {selectedJobDetails.contractDetails.termsAndConditions.slice(0, 5).map((term: string, index: number) => (
-                              <li key={index} className="font-subheading">{term}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Job Requirements */}
-                    {selectedJobDetails.contractDetails.clientRequirements.length > 0 && (
-                      <div>
-                        <h4 className="text-sm lg:text-md font-heading text-primary-navy mb-3">Job Requirements</h4>
-                        <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                          <ul className="list-disc list-inside space-y-1 lg:space-y-2 text-slate-600 text-sm">
-                            {selectedJobDetails.contractDetails.clientRequirements.slice(0, 6).map((req: string, index: number) => (
-                              <li key={index} className="font-subheading">{req}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Responsibilities */}
-                    {selectedJobDetails.contractDetails.deliverables.length > 0 && (
-                      <div>
-                        <h4 className="text-sm lg:text-md font-heading text-primary-navy mb-3">Responsibilities</h4>
-                        <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                          <ul className="list-disc list-inside space-y-1 lg:space-y-2 text-slate-600 text-sm">
-                            {selectedJobDetails.contractDetails.deliverables.slice(0, 6).map((del: string, index: number) => (
-                              <li key={index} className="font-subheading">{del}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Skills */}
-                <div>
-                  <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-2">Required Skills</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedJobDetails.skills.map((skill: string) => (
-                      <Badge key={skill} className="bg-slate-100 text-slate-700 font-subheading text-xs lg:text-sm">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Company Info */}
-                <div>
-                  <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-2">Company Information</h3>
-                  <div className="bg-slate-50 p-3 lg:p-4 rounded-lg">
-                    <p className="text-slate-600 font-subheading text-sm lg:text-base">{selectedJobDetails.companyInfo.description}</p>
-                    <div className="mt-4">
-                      <h4 className="text-sm lg:text-md font-heading text-primary-navy mb-2">Benefits</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedJobDetails.companyInfo.benefits.map((benefit: string) => (
-                          <Badge key={benefit} className="bg-slate-100 text-slate-700 font-subheading text-xs">
-                            {benefit}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
+        {/* Job Details Modal - Removed (now redirects to dedicated page) */}
 
         {/* Message Client Modal */}
         <Dialog open={showMessageModal} onOpenChange={setShowMessageModal}>

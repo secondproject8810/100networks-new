@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -66,22 +66,40 @@
   }
   
   .font-logo {
-    font-family: var(--font-lora);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-style: italic;
   }
   
   .font-heading {
-    font-family: 'Satoshi', var(--font-abhaya-libre), sans-serif;
-    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
   }
   
   .font-subheading {
-    font-family: 'Inter', var(--font-abhaya-libre), sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 500;
   }
 
   .font-body {
-    font-family: 'Inter', var(--font-abhaya-libre), sans-serif;
+    font-family: 'Inter', sans-serif;
     font-weight: 400;
+  }
+
+  /* Additional typography utilities for specific use cases */
+  .font-heading-bold {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+  }
+
+  .font-subheading-semibold {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+  }
+
+  .font-body-medium {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
   }
 
   /* Custom utility classes */
@@ -96,5 +114,31 @@
   /* Safe area utilities for mobile devices */
   .safe-area-pb {
     padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+
+  /* Mobile touch improvements */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  /* Improve mobile click targets */
+  @media (max-width: 768px) {
+    [role="button"], button, .cursor-pointer {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Prevent double-tap zoom on buttons */
+    button, .cursor-pointer {
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    
+    /* Improve card touch response */
+    .cursor-pointer {
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    }
   }
 }

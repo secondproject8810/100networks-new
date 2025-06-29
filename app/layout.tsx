@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next/dist/lib/metadata/types/metadata-interface"
-import { Inter, Lora, Abhaya_Libre } from "next/font/google"
+import { Inter, Lora, Abhaya_Libre, Montserrat } from "next/font/google"
 import "./globals.css"
 import HeaderWrapper from "@/components/header-wrapper"
 import MobileFooter from "@/components/mobile-footer"
@@ -16,6 +16,12 @@ const abhayaLibre = Abhaya_Libre({
   variable: "--font-abhaya-libre",
   weight: ["400", "500", "600", "700", "800"]
 })
+const montserrat = Montserrat({ 
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"]
+})
 
 export const metadata: Metadata = {
   title: "100 Networks",
@@ -30,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light">
-      <body className={`${inter.className} ${lora.variable} ${abhayaLibre.variable}`}>
+      <body className={`${inter.className} ${lora.variable} ${abhayaLibre.variable} ${montserrat.variable}`}>
         <div className="min-h-screen bg-background">
           <HeaderWrapper />
           <main className="px-2 md:px-4 py-2 md:py-3 pb-16 md:pb-3">{children}</main>

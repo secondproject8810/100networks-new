@@ -21,7 +21,6 @@ import {
   XCircle,
   Eye,
   GraduationCap,
-  X,
   Send
 } from "lucide-react"
 import {
@@ -32,7 +31,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export default function AppliedInternshipsPage() {
-  const [selectedInternshipDetails, setSelectedInternshipDetails] = useState<any>(null)
   const [showMessageModal, setShowMessageModal] = useState(false)
   const [selectedCompanyForMessage, setSelectedCompanyForMessage] = useState<any>(null)
   const [messageText, setMessageText] = useState("")
@@ -131,22 +129,7 @@ export default function AppliedInternshipsPage() {
   ]
 
   const handleViewInternshipDetails = (application: any) => {
-    const internshipDetails = {
-      title: application.internshipTitle,
-      company: application.companyName,
-      location: application.location,
-      stipend: application.stipend,
-      duration: application.duration,
-      fullDescription: `${application.coverLetter} This is a ${application.duration} internship program starting in ${application.programStart}.`,
-      skills: application.skills,
-      applicationStatus: application.status,
-      applicationStatusText: getStatusText(application.status),
-      appliedDate: application.appliedDate,
-      lastActivity: application.lastActivity,
-      mentor: application.mentor,
-      internshipDetails: application.status === "accepted" ? application.internshipDetails : null
-    }
-    setSelectedInternshipDetails(internshipDetails)
+    window.location.href = `/internships/applied/${application.id}`
   }
 
   const handleMessageCompany = (application: any) => {
@@ -444,109 +427,7 @@ export default function AppliedInternshipsPage() {
         </div>
       </div>
 
-      {/* Internship Details Modal */}
-      {selectedInternshipDetails && (
-        <div 
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 lg:p-4"
-          onClick={() => setSelectedInternshipDetails(null)}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-4xl w-full max-h-[95vh] lg:max-h-[90vh] overflow-hidden flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex-shrink-0 sticky top-0 bg-white z-10 p-4 lg:p-6 border-b border-slate-200 rounded-t-2xl">
-              <div className="flex items-center justify-between">
-                <h1 className="text-lg lg:text-2xl font-heading text-primary-navy">Application Details</h1>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setSelectedInternshipDetails(null)}
-                  className="rounded-xl"
-                >
-                  <X className="h-5 w-5" />
-                </Button>
-              </div>
-            </div>
 
-            <div className="flex-1 overflow-y-auto p-4 lg:p-6 pt-0">
-              <div className={`${getStatusColor(selectedInternshipDetails.applicationStatus)} rounded-lg p-3 lg:p-4 mb-4 lg:mb-6`}>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-                  <div className="flex items-center space-x-3">
-                    {getStatusIcon(selectedInternshipDetails.applicationStatus)}
-                    <div>
-                      <h3 className="font-subheading font-medium text-sm lg:text-base">Application Status</h3>
-                      <p className="text-xs lg:text-sm">{selectedInternshipDetails.applicationStatusText}</p>
-                    </div>
-                  </div>
-                  <div className="text-left sm:text-right text-xs lg:text-sm">
-                    <p>Applied: {selectedInternshipDetails.appliedDate}</p>
-                    <p>Last Activity: {selectedInternshipDetails.lastActivity}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-4 lg:space-y-6">
-                <div className="flex flex-col sm:flex-row items-start space-y-3 sm:space-y-0 sm:space-x-4">
-                  <div className="w-12 h-12 lg:w-16 lg:h-16 bg-primary-navy rounded-xl flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-heading text-lg lg:text-2xl">{selectedInternshipDetails.company.charAt(0)}</span>
-                  </div>
-                  <div className="flex-1 w-full">
-                    <h2 className="text-xl lg:text-2xl font-heading text-primary-navy mb-2">{selectedInternshipDetails.title}</h2>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-slate-600 font-subheading mb-4 space-y-2 sm:space-y-0 text-sm lg:text-base">
-                      <div className="flex items-center space-x-2">
-                        <Building className="h-4 w-4 lg:h-5 lg:w-5" />
-                        <span className="lg:text-lg">{selectedInternshipDetails.company}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <MapPin className="h-4 w-4 lg:h-5 lg:w-5" />
-                        <span>{selectedInternshipDetails.location}</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <DollarSign className="h-4 w-4 lg:h-5 lg:w-5" />
-                        <span className="font-semibold text-green-600">{selectedInternshipDetails.stipend}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {selectedInternshipDetails.internshipDetails && (
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 lg:p-4">
-                    <h3 className="text-base lg:text-lg font-heading text-emerald-800 mb-3">🎉 Congratulations! You&apos;ve been accepted</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="font-medium text-emerald-700">Weekly Hours:</span>
-                        <span className="ml-2 text-emerald-600">{selectedInternshipDetails.internshipDetails.weeklyHours}</span>
-                      </div>
-                      <div>
-                        <span className="font-medium text-emerald-700">Payment Schedule:</span>
-                        <span className="ml-2 text-emerald-600">{selectedInternshipDetails.internshipDetails.paymentSchedule}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div>
-                  <h3 className="text-base lg:text-xl font-heading text-primary-navy mb-3">About This Internship</h3>
-                  <p className="text-slate-600 font-body leading-relaxed text-sm lg:text-base">
-                    {selectedInternshipDetails.fullDescription}
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-base lg:text-xl font-heading text-primary-navy mb-3">Skills & Technologies</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedInternshipDetails.skills.map((skill: string, index: number) => (
-                      <Badge key={index} variant="outline" className="border-primary-navy text-primary-navy font-subheading px-2 lg:px-3 py-1 text-xs lg:text-sm">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Message Modal */}
       {showMessageModal && (

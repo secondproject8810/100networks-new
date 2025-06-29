@@ -10,6 +10,12 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			'logo': ['Montserrat', 'sans-serif'],
+  			'heading': ['Poppins', 'sans-serif'],
+  			'subheading': ['Inter', 'sans-serif'],
+  			'body': ['Inter', 'sans-serif'],
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

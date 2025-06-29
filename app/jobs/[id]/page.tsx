@@ -1,406 +1,306 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import {
-  ArrowLeft,
-  BookmarkIcon,
-  Share2,
-  MapPin,
-  Clock,
-  DollarSign,
-  Users,
-  Building2,
-  Calendar,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react"
+"use client"
 
-// Mock job data - in a real app, this would come from an API
-const getJobData = (id: string) => {
-  const jobs = {
-    "1": {
-      id: "1",
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { ArrowLeft, Building, MapPin, DollarSign, CheckCircle, BookmarkIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
+
+export default function JobDetailsPage({ params }: { params: { id: string } }) {
+  const router = useRouter()
+
+
+  // Mock job data - in a real app, this would be fetched based on the ID
+  const jobs = [
+    {
+      id: 1,
       title: "Senior Frontend Developer",
       company: "TechVision",
-      companyLogo: "/abstract-tech-logo.png",
+      logo: "/abstract-tech-logo.png",
       location: "San Francisco, CA",
+      salary: "$120K - $150K",
       type: "Full-time",
       remote: "Remote",
-      salary: "$120K - $150K",
-      postedDate: "3 days ago",
-      applicants: "47 applicants",
-      description: `We are seeking a highly skilled Senior Frontend Developer to join our dynamic team at TechVision. You will be responsible for developing and maintaining cutting-edge web applications using modern JavaScript frameworks.
-
-As a Senior Frontend Developer, you will work closely with our design and backend teams to create exceptional user experiences. You'll have the opportunity to mentor junior developers and contribute to architectural decisions that shape our product's future.`,
-      responsibilities: [
-        "Develop and maintain responsive web applications using React and TypeScript",
-        "Collaborate with UX/UI designers to implement pixel-perfect designs",
-        "Optimize applications for maximum speed and scalability",
-        "Mentor junior developers and conduct code reviews",
-        "Participate in architectural decisions and technical planning",
-        "Write clean, maintainable, and well-documented code",
-        "Stay up-to-date with the latest frontend technologies and best practices",
-      ],
+      posted: "3 days ago",
+      description: "We're looking for a senior frontend developer to lead our web application development team and architect scalable solutions for our growing platform.",
+      fullDescription: "We are seeking a highly skilled Senior Frontend Developer to join our dynamic team at TechVision. You will be responsible for architecting and developing scalable web applications using modern frontend technologies. This role offers the opportunity to work on cutting-edge projects that impact millions of users worldwide. You'll collaborate closely with our product, design, and backend teams to create exceptional user experiences.",
+      skills: ["React", "TypeScript", "Redux", "5+ years"],
       requirements: [
         "5+ years of experience in frontend development",
-        "Expert knowledge of React, TypeScript, and modern JavaScript",
-        "Experience with state management libraries (Redux, Zustand)",
-        "Proficiency in CSS preprocessors and CSS-in-JS solutions",
+        "Expert knowledge of React and TypeScript",
+        "Experience with state management libraries (Redux, MobX)",
+        "Strong understanding of modern JavaScript (ES6+)",
         "Experience with testing frameworks (Jest, React Testing Library)",
-        "Knowledge of build tools and bundlers (Webpack, Vite)",
-        "Strong understanding of web performance optimization",
-        "Excellent communication and collaboration skills",
+        "Familiarity with modern build tools (Webpack, Vite)",
+        "Experience with CSS-in-JS libraries or CSS modules"
       ],
-      niceToHave: [
-        "Experience with Next.js and server-side rendering",
-        "Knowledge of GraphQL and Apollo Client",
-        "Experience with design systems and component libraries",
-        "Familiarity with CI/CD pipelines",
-        "Experience with mobile app development (React Native)",
-      ],
-      benefits: [
-        "Competitive salary and equity package",
-        "Comprehensive health, dental, and vision insurance",
-        "Flexible work arrangements and remote-first culture",
-        "Professional development budget ($2,000/year)",
-        "Unlimited PTO and flexible working hours",
-        "Top-tier equipment and home office setup allowance",
-        "Team retreats and company events",
+      responsibilities: [
+        "Lead frontend architecture decisions and technical direction",
+        "Mentor junior developers and conduct code reviews",
+        "Collaborate with design team to implement pixel-perfect UIs",
+        "Optimize application performance and ensure scalability",
+        "Participate in agile development processes and sprint planning",
+        "Stay up-to-date with latest frontend technologies and best practices"
       ],
       companyInfo: {
-        size: "50-200 employees",
-        industry: "Information Technology",
+        name: "TechVision",
+        size: "100-500 employees",
+        industry: "Technology",
         founded: "2018",
-        description:
-          "TechVision is a fast-growing startup focused on building innovative solutions for the modern workplace. We're passionate about creating technology that empowers teams to work more efficiently and collaboratively.",
+        description: "TechVision is a fast-growing technology company that develops innovative software solutions for businesses worldwide.",
+        benefits: ["Health Insurance", "401(k) Matching", "Unlimited PTO", "Remote Work", "Learning Budget"],
+        culture: "Innovation-driven, collaborative, and growth-focused environment"
       },
-      skills: ["React", "TypeScript", "Redux", "CSS", "JavaScript", "Git"],
-      experienceLevel: "Senior level",
+      applicationDeadline: "2024-02-15",
+      hiringManager: "Sarah Chen, Engineering Manager"
     },
-    "2": {
-      id: "2",
+    {
+      id: 2,
       title: "Python AI Engineer",
       company: "Flexbone",
-      companyLogo: "/flexbone-logo.png",
+      logo: "/flexbone-logo.png",
       location: "Atlanta, GA",
+      salary: "$90K - $110K",
       type: "Contract",
       remote: "Hybrid",
-      salary: "$90K - $110K",
-      postedDate: "1 week ago",
-      applicants: "23 applicants",
-      description: `Join our AI team at Flexbone to develop cutting-edge machine learning solutions for healthcare applications. You'll work on projects that directly impact patient care and medical research.
-
-We're looking for a passionate Python AI Engineer who can translate complex healthcare challenges into innovative AI solutions. You'll collaborate with medical professionals, data scientists, and software engineers to build scalable ML systems.`,
-      responsibilities: [
-        "Design and implement machine learning models for healthcare applications",
-        "Develop and maintain AI pipelines using Python and TensorFlow/PyTorch",
-        "Collaborate with healthcare professionals to understand domain requirements",
-        "Optimize model performance and ensure scalability",
-        "Implement data preprocessing and feature engineering pipelines",
-        "Deploy models to production environments using cloud platforms",
-        "Monitor model performance and implement continuous improvement strategies",
-      ],
+      posted: "1 week ago",
+      description: "Join our AI team to develop cutting-edge machine learning solutions for healthcare applications and make a real impact on patient outcomes.",
+      fullDescription: "Flexbone is looking for a talented Python AI Engineer to join our healthcare AI division. You will be working on revolutionary machine learning models that help healthcare providers make better decisions and improve patient outcomes. This role involves working with large healthcare datasets, developing predictive models, and deploying AI solutions in production environments.",
+      skills: ["Python", "TensorFlow", "Machine Learning", "3+ years"],
       requirements: [
-        "3+ years of experience in machine learning and AI development",
+        "3+ years of experience in machine learning and AI",
         "Strong proficiency in Python and ML libraries (TensorFlow, PyTorch, scikit-learn)",
         "Experience with data preprocessing and feature engineering",
-        "Knowledge of cloud platforms (AWS, GCP, or Azure)",
-        "Understanding of MLOps practices and model deployment",
-        "Experience with healthcare data and HIPAA compliance is a plus",
-        "Strong analytical and problem-solving skills",
+        "Knowledge of deep learning architectures and techniques",
+        "Experience with cloud platforms (AWS, GCP, or Azure)",
+        "Understanding of healthcare data standards (HL7, FHIR) is a plus",
+        "Master's degree in Computer Science, Data Science, or related field"
       ],
-      niceToHave: [
-        "PhD in Computer Science, AI, or related field",
-        "Experience with medical imaging and computer vision",
-        "Knowledge of natural language processing for medical texts",
-        "Experience with distributed computing frameworks",
-        "Publications in AI/ML conferences or journals",
-      ],
-      benefits: [
-        "Competitive contract rate",
-        "Flexible working arrangements",
-        "Access to cutting-edge healthcare datasets",
-        "Opportunity to work on impactful healthcare solutions",
-        "Professional development opportunities",
-        "Potential for full-time conversion",
+      responsibilities: [
+        "Develop and train machine learning models for healthcare applications",
+        "Work with healthcare data to extract meaningful insights",
+        "Collaborate with data scientists and healthcare professionals",
+        "Deploy and maintain AI models in production environments",
+        "Conduct research on new AI techniques and methodologies",
+        "Ensure compliance with healthcare data privacy regulations"
       ],
       companyInfo: {
-        size: "200-500 employees",
+        name: "Flexbone",
+        size: "50-200 employees",
         industry: "Healthcare Technology",
-        founded: "2015",
-        description:
-          "Flexbone is a healthcare technology company dedicated to improving patient outcomes through innovative AI solutions. We work with hospitals and research institutions to develop next-generation medical technologies.",
+        founded: "2019",
+        description: "Flexbone develops AI-powered healthcare solutions that improve patient outcomes and reduce costs for healthcare providers.",
+        benefits: ["Health Insurance", "Stock Options", "Flexible Hours", "Professional Development", "Health Stipend"],
+        culture: "Mission-driven, innovative, and collaborative team focused on making healthcare better"
       },
-      skills: ["Python", "TensorFlow", "Machine Learning", "PyTorch", "AWS", "Data Science"],
-      experienceLevel: "Mid level",
-    },
+      applicationDeadline: "2024-02-22",
+      hiringManager: "David Park, VP of Product"
+    }
+  ]
+
+  const job = jobs.find(j => j.id === parseInt(params.id))
+
+  if (!job) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-heading text-primary-navy mb-4">Job Not Found</h1>
+          <p className="text-slate-600 font-subheading mb-6">The job you're looking for doesn't exist or has been removed.</p>
+          <Button 
+            onClick={() => router.push('/jobs')}
+            className="bg-primary-navy hover:bg-primary-navy/90 text-white rounded-xl font-subheading"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Jobs
+          </Button>
+        </div>
+      </div>
+    )
   }
 
-  return jobs[id as keyof typeof jobs] || jobs["1"]
-}
+  const handleApplyClick = () => {
+    router.push(`/jobs/${params.id}/apply`)
+  }
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
-  const job = getJobData(params.id)
+
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Header */}
-      <div className="flex items-center mb-6">
-        <Link href="/jobs" className="mr-4">
-          <Button variant="ghost" size="icon">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold">Job Details</h1>
-        </div>
-        <div className="flex space-x-2">
-          <Button variant="outline" size="icon">
-            <Share2 className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="icon">
-            <BookmarkIcon className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Job Header */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-start space-x-4 mb-6">
-                <img src={job.companyLogo || "/placeholder.svg"} alt={job.company} className="h-16 w-16 rounded-lg" />
-                <div className="flex-1">
-                  <h1 className="text-2xl font-bold mb-2">{job.title}</h1>
-                  <div className="flex items-center space-x-4 text-muted-foreground mb-4">
-                    <div className="flex items-center">
-                      <Building2 className="h-4 w-4 mr-1" />
-                      {job.company}
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      {job.location}
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-1" />
-                      {job.postedDate}
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary">{job.type}</Badge>
-                    <Badge variant="secondary">{job.remote}</Badge>
-                    <Badge variant="secondary">{job.experienceLevel}</Badge>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted rounded-lg">
-                <div className="flex items-center">
-                  <DollarSign className="h-5 w-5 text-green-600 mr-2" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Salary</p>
-                    <p className="font-medium">{job.salary}</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Users className="h-5 w-5 text-blue-600 mr-2" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Applicants</p>
-                    <p className="font-medium">{job.applicants}</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Calendar className="h-5 w-5 text-purple-600 mr-2" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Posted</p>
-                    <p className="font-medium">{job.postedDate}</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Job Description */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Job Description</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{job.description}</p>
-              </div>
-
-              <Separator />
-
-              <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
-                  Key Responsibilities
-                </h3>
-                <ul className="space-y-2">
-                  {job.responsibilities.map((responsibility, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="h-2 w-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0" />
-                      <span className="text-muted-foreground">{responsibility}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <Separator />
-
-              <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <AlertCircle className="h-5 w-5 text-orange-600 mr-2" />
-                  Requirements
-                </h3>
-                <ul className="space-y-2">
-                  {job.requirements.map((requirement, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="h-2 w-2 bg-orange-600 rounded-full mt-2 mr-3 flex-shrink-0" />
-                      <span className="text-muted-foreground">{requirement}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <Separator />
-
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Nice to Have</h3>
-                <ul className="space-y-2">
-                  {job.niceToHave.map((item, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="h-2 w-2 bg-gray-400 rounded-full mt-2 mr-3 flex-shrink-0" />
-                      <span className="text-muted-foreground">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <Separator />
-
-              <div>
-                <h3 className="text-lg font-semibold mb-4">Benefits & Perks</h3>
-                <ul className="space-y-2">
-                  {job.benefits.map((benefit, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="h-2 w-2 bg-green-600 rounded-full mt-2 mr-3 flex-shrink-0" />
-                      <span className="text-muted-foreground">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          {/* Apply Card */}
-          <Card className="sticky top-6">
-            <CardContent className="p-6">
-              <Button className="w-full mb-4" size="lg" asChild>
-                <Link href={`/jobs/${job.id}/apply`}>Apply for this position</Link>
+    <>
+      <div className="min-h-screen bg-white">
+        <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => router.push('/jobs')}
+                className="rounded-xl"
+              >
+                <ArrowLeft className="h-5 w-5" />
               </Button>
-              <Button variant="outline" className="w-full mb-4">
-                Save for later
-              </Button>
-              <p className="text-sm text-muted-foreground text-center">
-                By applying, you agree to our Terms of Service and Privacy Policy
-              </p>
-            </CardContent>
-          </Card>
+              <h1 className="text-lg lg:text-2xl font-heading text-primary-navy">Job Details</h1>
+            </div>
+          </div>
 
-          {/* Skills */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Required Skills</CardTitle>
-            </CardHeader>
-            <CardContent>
+          {/* Job Content */}
+          <div className="space-y-6">
+            {/* Basic Info */}
+            <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
+              <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden border border-slate-200 flex-shrink-0">
+                <img src={job.logo} alt={job.company} className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1 w-full">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 space-y-2 sm:space-y-0">
+                  <h2 className="text-xl lg:text-2xl font-heading text-primary-navy">{job.title}</h2>
+                  <span className={`px-3 py-1 rounded-full text-sm font-subheading self-start ${
+                    job.remote === "Remote" ? "bg-green-100 text-green-700" :
+                    job.remote === "Hybrid" ? "bg-blue-100 text-blue-700" :
+                    job.remote === "On-site" ? "bg-red-100 text-red-700" :
+                    "bg-slate-100 text-slate-700"
+                  }`}>
+                    {job.remote}
+                  </span>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-slate-600 font-subheading mb-3 space-y-2 sm:space-y-0 text-sm lg:text-base">
+                  <div className="flex items-center space-x-1">
+                    <Building className="h-4 w-4" />
+                    <span>{job.company}</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <MapPin className="h-4 w-4" />
+                    <span>{job.location}</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <DollarSign className="h-4 w-4" />
+                    <span className="font-heading text-primary-navy">{job.salary}</span>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 lg:gap-4 text-slate-500 font-subheading text-sm">
+                  <span>{job.type}</span>
+                  <span>•</span>
+                  <span>Posted {job.posted}</span>
+                  <span className="hidden sm:inline">•</span>
+                  <span className="sm:inline block">Apply by {job.applicationDeadline}</span>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Job Description */}
+            <div>
+              <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Job Description</h3>
+              <p className="text-slate-600 font-subheading leading-relaxed text-sm lg:text-base">{job.fullDescription}</p>
+            </div>
+
+            {/* Skills Required */}
+            <div>
+              <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Skills Required</h3>
               <div className="flex flex-wrap gap-2">
-                {job.skills.map((skill, index) => (
-                  <Badge key={index} variant="outline">
-                    {skill}
-                  </Badge>
+                {job.skills.map((skill: string, index: number) => (
+                  <Badge key={index} className={`font-subheading text-xs lg:text-sm ${
+                    skill.includes('+') || skill.includes('years') 
+                      ? 'bg-[#0056B3]/10 text-[#0056B3]' 
+                      : 'bg-slate-100 text-slate-700'
+                  }`}>{skill}</Badge>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
 
-          {/* Company Info */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">About {job.company}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center space-x-4">
-                <img src={job.companyLogo || "/placeholder.svg"} alt={job.company} className="h-12 w-12 rounded" />
-                <div>
-                  <h3 className="font-medium">{job.company}</h3>
-                  <p className="text-sm text-muted-foreground">{job.companyInfo.industry}</p>
-                </div>
-              </div>
+            {/* Requirements */}
+            <div>
+              <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Requirements</h3>
+              <ul className="space-y-2">
+                {job.requirements.map((requirement: string, index: number) => (
+                  <li key={index} className="flex items-start space-x-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
+                    <span className="text-slate-600 font-subheading text-sm lg:text-base">{requirement}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Company size:</span>
-                  <span>{job.companyInfo.size}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Founded:</span>
-                  <span>{job.companyInfo.founded}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Industry:</span>
-                  <span>{job.companyInfo.industry}</span>
-                </div>
-              </div>
+            {/* Responsibilities */}
+            <div>
+              <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Responsibilities</h3>
+              <ul className="space-y-2">
+                {job.responsibilities.map((responsibility: string, index: number) => (
+                  <li key={index} className="flex items-start space-x-2">
+                    <CheckCircle className="h-4 w-4 text-primary-navy mt-1 flex-shrink-0" />
+                    <span className="text-slate-600 font-subheading text-sm lg:text-base">{responsibility}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-              <Separator />
+            {/* Company Information */}
+            <div>
+              <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">About the Company</h3>
+              <Card className="border-slate-200">
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    <div>
+                      <h4 className="font-heading text-primary-navy text-sm lg:text-base">{job.companyInfo.name}</h4>
+                      <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1 text-xs lg:text-sm text-slate-500">
+                        <span>{job.companyInfo.size}</span>
+                        <span>•</span>
+                        <span>{job.companyInfo.industry}</span>
+                        <span>•</span>
+                        <span>Founded {job.companyInfo.founded}</span>
+                      </div>
+                    </div>
+                    <p className="text-slate-600 font-subheading text-sm lg:text-base">{job.companyInfo.description}</p>
+                    <div>
+                      <h5 className="font-subheading font-medium text-primary-navy mb-2 text-sm lg:text-base">Benefits</h5>
+                      <div className="flex flex-wrap gap-2">
+                        {job.companyInfo.benefits.map((benefit: string, index: number) => (
+                          <Badge key={index} className="bg-green-50 text-green-700 font-subheading text-xs">{benefit}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h5 className="font-subheading font-medium text-primary-navy mb-2 text-sm lg:text-base">Company Culture</h5>
+                      <p className="text-slate-600 font-subheading text-sm lg:text-base">{job.companyInfo.culture}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
-              <p className="text-sm text-muted-foreground">{job.companyInfo.description}</p>
+            {/* Hiring Manager */}
+            <div>
+              <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Hiring Manager</h3>
+              <p className="text-slate-600 font-subheading text-sm lg:text-base">{job.hiringManager}</p>
+            </div>
 
-              <Button variant="outline" className="w-full">
-                View Company Profile
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-slate-200">
+              <Button 
+                className="flex-1 bg-primary-navy hover:bg-primary-navy/90 text-white rounded-xl font-subheading h-12"
+                onClick={handleApplyClick}
+              >
+                Apply for this Position
               </Button>
-            </CardContent>
-          </Card>
-
-          {/* Similar Jobs */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Similar Jobs</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="p-3 border rounded-lg hover:bg-muted cursor-pointer">
-                  <h4 className="font-medium text-sm">Frontend Developer</h4>
-                  <p className="text-xs text-muted-foreground">Google • Remote</p>
-                  <p className="text-xs text-muted-foreground">$100K - $130K</p>
-                </div>
-                <div className="p-3 border rounded-lg hover:bg-muted cursor-pointer">
-                  <h4 className="font-medium text-sm">React Developer</h4>
-                  <p className="text-xs text-muted-foreground">Meta • San Francisco</p>
-                  <p className="text-xs text-muted-foreground">$110K - $140K</p>
-                </div>
-                <div className="p-3 border rounded-lg hover:bg-muted cursor-pointer">
-                  <h4 className="font-medium text-sm">Full Stack Engineer</h4>
-                  <p className="text-xs text-muted-foreground">Stripe • Remote</p>
-                  <p className="text-xs text-muted-foreground">$120K - $160K</p>
-                </div>
-              </div>
-              <Button variant="outline" className="w-full" size="sm">
-                View More Jobs
+              <Button 
+                variant="outline" 
+                className="flex-1 sm:flex-none sm:min-w-[140px] border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading h-12"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  // Handle save job functionality here
+                  console.log("Job saved:", job.title)
+                }}
+              >
+                <BookmarkIcon className="h-4 w-4 mr-2" />
+                Save Job
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Application Modal - Removed (now redirects to dedicated apply page) */}
+    </>
   )
 }

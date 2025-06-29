@@ -16,7 +16,6 @@ import { useState } from "react"
 export default function FeedPage() {
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set())
   const [savedPosts, setSavedPosts] = useState<Set<string>>(new Set())
-  const [selectedPost, setSelectedPost] = useState<any>(null)
   const [newComment, setNewComment] = useState("")
   const [showPostMenu, setShowPostMenu] = useState<string | null>(null)
   const [shareModalPost, setShareModalPost] = useState<any>(null)
@@ -134,7 +133,7 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
   ]
 
   const handlePostClick = (post: any) => {
-    setSelectedPost(post)
+    window.location.href = `/feed/${post.id}`
   }
 
   const handleAddComment = () => {
@@ -637,155 +636,7 @@ Next chapter: Leading impactful projects and helping others achieve their goals.
         </Dialog>
       )}
 
-      {/* Post Detail Modal */}
-      {selectedPost && (
-        <Dialog open={!!selectedPost} onOpenChange={() => setSelectedPost(null)}>
-          <DialogContent className="max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[70%] xl:max-w-[60%] max-h-[90vh] p-0 bg-white rounded-2xl shadow-2xl border-0 overflow-hidden [&>button]:!outline-none [&>button]:!ring-0 [&>button]:!shadow-none [&>button]:focus:!outline-none [&>button]:focus:!ring-0 [&>button]:focus:!shadow-none">
-            <div className="flex flex-col h-full max-h-[90vh]">
-              {/* Header */}
-              <DialogHeader className="p-4 sm:p-6 border-b border-slate-100 flex-shrink-0">
-                <div className="flex items-center space-x-3 sm:space-x-4">
-                  <Avatar className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0">
-                    <AvatarImage src={selectedPost.avatar} alt="User" />
-                    <AvatarFallback className="bg-[#0056B3]/10 text-[#0056B3] font-medium">
-                      {selectedPost.author.split(' ').map((n: string) => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0 flex-1">
-                    <DialogTitle className="font-heading text-lg sm:text-xl text-primary-navy truncate">{selectedPost.author}</DialogTitle>
-                    <p className="text-sm sm:text-base text-slate-500 font-subheading line-clamp-2">{selectedPost.title}</p>
-                    <p className="text-xs sm:text-sm text-slate-400 mt-1">{selectedPost.timeAgo}</p>
-                  </div>
-                </div>
-              </DialogHeader>
 
-              {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto">
-                <div className="p-4 sm:p-6">
-                  {/* Post Content */}
-                  <div className="mb-6">
-                    <p className="text-slate-700 font-subheading leading-relaxed text-sm sm:text-base whitespace-pre-line">
-                      {selectedPost.content}
-                    </p>
-                  </div>
-
-                  {/* Post Image */}
-                  {selectedPost.image && (
-                    <div className="rounded-xl overflow-hidden border border-slate-100 mb-6">
-                      <img src={selectedPost.image} alt="Post content" className="w-full h-48 sm:h-64 md:h-72 object-cover" />
-                      {selectedPost.imageTitle && (
-                        <div className="p-4 bg-slate-50">
-                          <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-2">{selectedPost.imageTitle}</h3>
-                          <p className="text-sm sm:text-base text-slate-600 font-subheading">{selectedPost.imageDescription}</p>
-                          <p className="text-sm text-[#0056B3] mt-2 font-medium">{selectedPost.imageSource}</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Post Actions */}
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-                    <span className="text-slate-500 font-subheading text-sm sm:text-base">{selectedPost.likes} likes • {selectedPost.commentsCount} comments</span>
-                    <div className="flex space-x-4">
-                      <Button 
-                        variant="ghost" 
-                        size="lg" 
-                        className={`hover:bg-transparent transition-all duration-200 p-2 sm:p-3 ${
-                          likedPosts.has(selectedPost.id) 
-                            ? 'text-red-500' 
-                            : 'text-slate-600 hover:text-red-500'
-                        }`}
-                        onClick={() => toggleLike(selectedPost.id)}
-                      >
-                        <Heart className={`h-6 w-6 sm:h-7 sm:w-7 transition-all duration-200 stroke-[2.5] ${
-                          likedPosts.has(selectedPost.id) ? 'fill-red-500' : ''
-                        }`} />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="lg" 
-                        className={`hover:bg-transparent transition-all duration-200 p-2 sm:p-3 ${
-                          savedPosts.has(selectedPost.id) 
-                            ? 'text-[#0056B3]' 
-                            : 'text-slate-600 hover:text-[#0056B3]'
-                        }`}
-                        onClick={() => toggleSave(selectedPost.id)}
-                      >
-                        <BookmarkIcon className={`h-6 w-6 sm:h-7 sm:w-7 transition-all duration-200 stroke-[2.5] ${
-                          savedPosts.has(selectedPost.id) ? 'fill-[#0056B3]' : ''
-                        }`} />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Comments Section */}
-                  <div>
-                    <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-4">Comments</h3>
-                    
-                    {/* Add Comment */}
-                    <div className="flex space-x-3 mb-6">
-                      <Avatar className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
-                        <AvatarImage src="/placeholder-user.jpg" alt="You" />
-                        <AvatarFallback className="bg-[#0056B3]/10 text-[#0056B3] font-medium text-xs sm:text-sm">YU</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <Textarea
-                          placeholder="Write a comment..."
-                          value={newComment}
-                          onChange={(e) => setNewComment(e.target.value)}
-                          className="min-h-[60px] sm:min-h-[80px] resize-none border-slate-200 !outline-none !ring-0 !shadow-none focus:!outline-none focus:!ring-0 focus:!shadow-none focus:!border-slate-300 text-sm sm:text-base font-subheading rounded-xl"
-                        />
-                        <div className="flex justify-end mt-2">
-                          <Button
-                            onClick={handleAddComment}
-                            disabled={!newComment.trim()}
-                            size="sm"
-                            className="bg-primary-navy hover:bg-primary-navy/90 text-white rounded-full px-4 py-2 text-xs sm:text-sm"
-                          >
-                            Comment
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Comments List */}
-                    <div className="space-y-4">
-                      {selectedPost.comments.map((comment: any) => (
-                        <div key={comment.id} className="flex space-x-3">
-                          <Avatar className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0">
-                            <AvatarImage src={comment.avatar} alt={comment.author} />
-                            <AvatarFallback className="bg-[#0056B3]/10 text-[#0056B3] font-medium text-xs sm:text-sm">
-                              {comment.author.split(' ').map((n: string) => n[0]).join('')}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 bg-slate-50 rounded-xl p-3 sm:p-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="font-medium text-primary-navy text-sm sm:text-base">{comment.author}</div>
-                              <div className="text-xs sm:text-sm text-slate-400">{comment.timeAgo}</div>
-                            </div>
-                            <p className="text-slate-700 font-subheading text-sm sm:text-base leading-relaxed mb-2">
-                              {comment.content}
-                            </p>
-                            <div className="flex items-center space-x-4">
-                              <Button variant="ghost" size="sm" className="text-slate-500 hover:text-red-500 hover:bg-transparent p-1">
-                                <Heart className="h-4 w-4 mr-1" />
-                                <span className="text-xs">{comment.likes}</span>
-                              </Button>
-                              <Button variant="ghost" size="sm" className="text-slate-500 hover:text-primary-navy hover:bg-transparent p-1 text-xs">
-                                Reply
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   )
 }

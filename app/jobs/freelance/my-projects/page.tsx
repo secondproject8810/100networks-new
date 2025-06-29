@@ -55,8 +55,10 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function MyProjectsPage() {
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState("posted")
   const [updateMessage, setUpdateMessage] = useState("")
   const [selectedProject, setSelectedProject] = useState<number | null>(null)
@@ -429,11 +431,11 @@ export default function MyProjectsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Active":
-        return "bg-green-100 text-green-800"
+        return "bg-blue-100 text-blue-800"
       case "Completed":
         return "bg-blue-100 text-blue-800"
       case "Paused":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-blue-100 text-blue-800"
       default:
         return "bg-slate-100 text-slate-700"
     }
@@ -444,11 +446,11 @@ export default function MyProjectsPage() {
       case "In Progress":
         return "bg-blue-100 text-blue-800"
       case "Review Required":
-        return "bg-orange-100 text-orange-800"
+        return "bg-blue-100 text-blue-800"
       case "On Hold":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-blue-100 text-blue-800"
       case "Completed":
-        return "bg-green-100 text-green-800"
+        return "bg-blue-100 text-blue-800"
       default:
         return "bg-slate-100 text-slate-700"
     }
@@ -457,13 +459,13 @@ export default function MyProjectsPage() {
   const getMilestoneStatusColor = (status: string) => {
     switch (status) {
       case "completed":
-        return "bg-green-100 text-green-800"
+        return "bg-blue-100 text-blue-800"
       case "in_progress":
         return "bg-blue-100 text-blue-800"
       case "review_required":
-        return "bg-orange-100 text-orange-800"
+        return "bg-blue-100 text-blue-800"
       case "on_hold":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-blue-100 text-blue-800"
       case "pending":
         return "bg-slate-100 text-slate-700"
       default:
@@ -491,13 +493,13 @@ export default function MyProjectsPage() {
   const getMilestoneIcon = (status: string) => {
     switch (status) {
       case "completed":
-        return <CheckCircle className="h-4 w-4 text-green-600" />
+        return <CheckCircle className="h-4 w-4 text-blue-600" />
       case "in_progress":
         return <PlayCircle className="h-4 w-4 text-blue-600" />
       case "review_required":
-        return <AlertTriangle className="h-4 w-4 text-orange-600" />
+        return <AlertTriangle className="h-4 w-4 text-blue-600" />
       case "on_hold":
-        return <PauseCircle className="h-4 w-4 text-yellow-600" />
+        return <PauseCircle className="h-4 w-4 text-blue-600" />
       case "pending":
         return <Clock className="h-4 w-4 text-muted" />
       default:
@@ -515,13 +517,13 @@ export default function MyProjectsPage() {
   const getApplicationStatusColor = (status: string) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-blue-100 text-blue-800"
       case "interviewed":
         return "bg-blue-100 text-blue-800"
       case "hired":
-        return "bg-green-100 text-green-800"
+        return "bg-blue-100 text-blue-800"
       case "rejected":
-        return "bg-red-100 text-red-800"
+        return "bg-blue-100 text-blue-800"
       default:
         return "bg-slate-100 text-slate-700"
     }
@@ -563,7 +565,7 @@ export default function MyProjectsPage() {
 
   return (
     <div className="min-h-full pb-20 md:pb-6">
-      <div className="w-full max-w-7xl mx-auto py-4 md:py-6 px-4 md:px-6">
+      <div className="w-full sm:w-[95%] md:w-[80%] lg:w-[65%] mx-auto py-4 md:py-6 px-4 md:px-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 mb-6 md:mb-8">
           <div className="flex items-center space-x-3 sm:space-x-4">
@@ -603,7 +605,7 @@ export default function MyProjectsPage() {
           {/* Posted Projects Tab */}
           <TabsContent value="posted" className="space-y-6">
             {/* Stats Overview */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
               <Card className="border-slate-200 shadow-sm rounded-xl">
                 <CardContent className="p-3 sm:p-4 md:p-6">
                   <div className="flex items-center space-x-2 sm:space-x-3">
@@ -620,38 +622,12 @@ export default function MyProjectsPage() {
               <Card className="border-slate-200 shadow-sm rounded-xl">
                 <CardContent className="p-3 sm:p-4 md:p-6">
                   <div className="flex items-center space-x-2 sm:space-x-3">
-                    <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-green-100 rounded-xl flex items-center justify-center">
-                      <Users className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-green-600" />
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <Users className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-blue-600" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-lg sm:text-xl md:text-2xl font-heading text-primary-navy">35</p>
                       <p className="text-xs sm:text-sm font-subheading text-slate-600">Total Applications</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="border-slate-200 shadow-sm rounded-xl">
-                <CardContent className="p-3 sm:p-4 md:p-6">
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-blue-600" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-xl md:text-2xl font-heading text-primary-navy">8</p>
-                      <p className="text-xs sm:text-sm font-subheading text-slate-600">Interviews Scheduled</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="border-slate-200 shadow-sm rounded-xl">
-                <CardContent className="p-3 sm:p-4 md:p-6">
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-amber-100 rounded-xl flex items-center justify-center">
-                      <Star className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-amber-600" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-xl md:text-2xl font-heading text-primary-navy">4.8</p>
-                      <p className="text-xs sm:text-sm font-subheading text-slate-600">Average Rating</p>
                     </div>
                   </div>
                 </CardContent>
@@ -661,7 +637,7 @@ export default function MyProjectsPage() {
             {/* Posted Projects List */}
             <div className="space-y-4 md:space-y-6">
               {projects.map((project) => (
-                <Card key={project.id} className="border-slate-200 shadow-sm rounded-xl hover:shadow-md transition-shadow">
+                <Card key={project.id} className="border-slate-200 shadow-sm rounded-xl hover:shadow-md transition-shadow cursor-pointer" onClick={() => router.push(`/jobs/freelance/my-projects/${project.id}`)}>
                   <CardHeader className="border-b border-slate-100 p-4 sm:p-6">
                     <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-3 sm:space-y-0">
                       <div className="flex-1 min-w-0">
@@ -765,9 +741,9 @@ export default function MyProjectsPage() {
                                       variant="outline" 
                                       className={`font-subheading text-xs sm:text-sm flex-shrink-0 ${
                                         application.status === "hired" 
-                                          ? "border-green-500 text-green-600" 
+                                        ? "border-blue-500 text-blue-600" 
                                           : application.status === "rejected" 
-                                          ? "border-red-500 text-red-600"
+                                        ? "border-blue-500 text-blue-600"
                                           : "border-amber-500 text-amber-600"
                                       }`}
                                     >
@@ -796,7 +772,8 @@ export default function MyProjectsPage() {
                                       <Link href={`/hire-freelancer?project=${project.id}&applicant=${application.id}`}>
                                         <Button 
                                           size="sm"
-                                          className="bg-green-600 hover:bg-green-700 text-white rounded-lg font-subheading text-xs sm:text-sm"
+                                          className="bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-subheading text-xs sm:text-sm"
+                                          onClick={(e) => e.stopPropagation()}
                                         >
                                           Hire Now
                                         </Button>
@@ -881,8 +858,8 @@ export default function MyProjectsPage() {
               <Card className="border-slate-200 shadow-sm rounded-xl">
                 <CardContent className="p-3 sm:p-4 md:p-6">
                   <div className="flex items-center space-x-2 sm:space-x-3">
-                    <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-green-100 rounded-xl flex items-center justify-center">
-                      <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-green-600" />
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-blue-600" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-lg sm:text-xl md:text-2xl font-heading text-primary-navy">
@@ -1083,13 +1060,13 @@ export default function MyProjectsPage() {
 
                     {/* Payment Summary */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                      <Card className="border-green-200 bg-green-50">
+                      <Card className="border-blue-200 bg-blue-50">
                         <CardContent className="p-4 text-center">
                           <div className="flex items-center justify-center mb-2">
-                            <Shield className="h-5 w-5 text-green-600 mr-2" />
-                            <span className="text-sm font-subheading text-green-800">Paid Amount</span>
+                            <Shield className="h-5 w-5 text-blue-600 mr-2" />
+                            <span className="text-sm font-subheading text-blue-800">Paid Amount</span>
                           </div>
-                          <p className="text-xl font-heading text-green-700">${project.paidAmount.toLocaleString()}</p>
+                          <p className="text-xl font-heading text-blue-700">${project.paidAmount.toLocaleString()}</p>
                         </CardContent>
                       </Card>
                       <Card className="border-blue-200 bg-blue-50">
@@ -1135,7 +1112,7 @@ export default function MyProjectsPage() {
                               <div className="flex items-center space-x-4 text-xs text-muted">
                                 <span className="font-subheading">Due: {milestone.dueDate}</span>
                                 {milestone.completedDate && (
-                                  <span className="font-subheading text-green-600">Completed: {milestone.completedDate}</span>
+                                  <span className="font-subheading text-blue-600">Completed: {milestone.completedDate}</span>
                                 )}
                               </div>
                             </div>
@@ -1378,9 +1355,9 @@ export default function MyProjectsPage() {
                             variant="outline" 
                             className={`font-subheading ${
                               selectedFreelancer.status === "hired" 
-                                ? "border-green-500 text-green-600" 
+                            ? "border-blue-500 text-blue-600"
                                 : selectedFreelancer.status === "rejected" 
-                                ? "border-red-500 text-red-600"
+                            ? "border-blue-500 text-blue-600"
                                 : "border-amber-500 text-amber-600"
                             }`}
                           >

@@ -359,7 +359,7 @@ export default function ExplorePage() {
       <div className="text-center mb-6 sm:mb-8 md:mb-12 mt-8 sm:mt-12 md:mt-16">
         {/* Logo */}
         <div className="mb-3 sm:mb-4">
-          <span className="font-logo text-3xl sm:text-4xl md:text-5xl font-bold">
+                      <span className="font-logo text-3xl sm:text-4xl md:text-5xl font-black italic">
             100<span className="text-[#0056B3]">Networks</span>
           </span>
         </div>
@@ -445,6 +445,160 @@ export default function ExplorePage() {
             </Button>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Section */}
+      <div className="mb-8 sm:mb-12 md:mb-16">
+        <div className="text-center mb-6 sm:mb-8 md:mb-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-heading text-primary-navy mb-3 sm:mb-4 md:mb-6">
+            Accelerate Your <span className="text-[#0056B3]">Professional Journey</span>
+          </h1>
+          <p className="text-base sm:text-lg md:text-xl text-slate-600 font-subheading max-w-4xl mx-auto mb-6 sm:mb-8 md:mb-10 px-4">
+            Connect with industry leaders, discover career opportunities, and build meaningful professional relationships that propel your success forward.
+          </p>
+        </div>
+
+        {/* Feature Cards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-10">
+          {/* Opportunities Card */}
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-4 sm:p-6 relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="relative z-10">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-500 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Target className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              </div>
+              <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-2 sm:mb-3">Opportunities</h3>
+              <p className="text-sm sm:text-base text-slate-600 font-subheading mb-3 sm:mb-4">
+                Discover jobs, internships, and freelance projects tailored to your skills
+              </p>
+              <div className="text-xs sm:text-sm text-blue-600 font-medium">
+                10,000+ Active Listings
+              </div>
+            </div>
+            <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-blue-200/30 rounded-full"></div>
+          </div>
+
+          {/* Networking Card */}
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-4 sm:p-6 relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="relative z-10">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-500 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Users className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              </div>
+              <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-2 sm:mb-3">Networking</h3>
+              <p className="text-sm sm:text-base text-slate-600 font-subheading mb-3 sm:mb-4">
+                Connect with professionals, mentors, and industry leaders worldwide
+              </p>
+              <div className="text-xs sm:text-sm text-blue-600 font-medium">
+                500K+ Professionals
+              </div>
+            </div>
+            <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-blue-200/30 rounded-full"></div>
+          </div>
+
+          {/* Growth Card */}
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-4 sm:p-6 relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="relative z-10">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-500 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Award className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              </div>
+              <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-2 sm:mb-3">Growth</h3>
+              <p className="text-sm sm:text-base text-slate-600 font-subheading mb-3 sm:mb-4">
+                Access skill development resources and career advancement tools
+              </p>
+              <div className="text-xs sm:text-sm text-blue-600 font-medium">
+                Expert-Led Programs
+              </div>
+            </div>
+            <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-blue-200/30 rounded-full"></div>
+          </div>
+
+          {/* Success Card */}
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-4 sm:p-6 relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className="relative z-10">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-blue-500 rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300">
+                <Star className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+              </div>
+              <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-2 sm:mb-3">Success</h3>
+              <p className="text-sm sm:text-base text-slate-600 font-subheading mb-3 sm:mb-4">
+                Join thousands who've advanced their careers through our platform
+              </p>
+              <div className="text-xs sm:text-sm text-blue-600 font-medium">
+                95% Success Rate
+              </div>
+            </div>
+            <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-blue-200/30 rounded-full"></div>
+          </div>
+        </div>
+
+        {/* Who's Using 100Networks Section */}
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-heading text-primary-navy mb-6 sm:mb-8">
+            Who's Building Their Future with 100Networks?
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            {/* Students & Graduates */}
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <div className="text-white text-2xl sm:text-3xl">🎓</div>
+            </div>
+              <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-3 sm:mb-4">Students & Graduates</h3>
+              <p className="text-sm sm:text-base text-slate-600 font-subheading mb-4 sm:mb-6">
+                Launch Your Career: Find internships, entry-level positions, and build your professional network from day one.
+              </p>
+              <div className="text-xs sm:text-sm text-blue-600 font-medium">
+                Join 200K+ Students Building Their Future
+              </div>
+            </div>
+
+            {/* Professionals & Freelancers */}
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <div className="text-white text-2xl sm:text-3xl">💼</div>
+            </div>
+              <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-3 sm:mb-4">Professionals & Freelancers</h3>
+              <p className="text-sm sm:text-base text-slate-600 font-subheading mb-4 sm:mb-6">
+                Advance Your Path: Discover high-quality opportunities, expand your network, and take your career to the next level.
+              </p>
+              <div className="text-xs sm:text-sm text-blue-600 font-medium">
+                Connect with 300K+ Industry Professionals
+              </div>
+            </div>
+
+            {/* Companies & Recruiters */}
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-slate-100 hover:shadow-md transition-all duration-300">
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+              <div className="text-white text-2xl sm:text-3xl">🏢</div>
+            </div>
+              <h3 className="font-heading text-lg sm:text-xl text-primary-navy mb-3 sm:mb-4">Companies & Recruiters</h3>
+              <p className="text-sm sm:text-base text-slate-600 font-subheading mb-4 sm:mb-6">
+                Find Top Talent: Access a curated pool of skilled professionals and build your dream team efficiently.
+              </p>
+              <div className="text-xs sm:text-sm text-blue-600 font-medium">
+                Trusted by 50K+ Companies Worldwide
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-navy to-[#0056B3] text-white px-4 py-2 rounded-full text-sm font-medium mb-4">
+            <CheckCircle className="w-4 h-4" />
+            <span>Join the Professional Revolution</span>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+            <Link href="/jobs">
+              <Button className="bg-primary-navy hover:bg-primary-navy/90 text-white px-6 sm:px-8 py-3 rounded-xl font-subheading font-bold text-sm sm:text-base w-full sm:w-auto">
+                Explore Opportunities
+              </Button>
+            </Link>
+            <Link href="/companies">
+              <Button variant="outline" className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white px-6 sm:px-8 py-3 rounded-xl font-subheading font-bold text-sm sm:text-base w-full sm:w-auto">
+                Discover Companies
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

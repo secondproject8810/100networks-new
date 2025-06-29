@@ -111,7 +111,7 @@ export default function JobsPage() {
   const [showFilters, setShowFilters] = useState(false)
   const [salaryRange, setSalaryRange] = useState([40000, 200000])
   const [experienceRange, setExperienceRange] = useState([0, 15])
-  const [selectedJob, setSelectedJob] = useState<any>(null)
+
   const [showApplicationModal, setShowApplicationModal] = useState(false)
   const [sortBy, setSortBy] = useState("relevance")
   const [applicationData, setApplicationData] = useState({
@@ -343,7 +343,7 @@ export default function JobsPage() {
   ]
 
   const handleJobClick = (job: any) => {
-    setSelectedJob(job)
+    window.location.href = `/jobs/${job.id}`
   }
 
   const handleApplyClick = () => {
@@ -352,7 +352,7 @@ export default function JobsPage() {
 
   const handleSubmitApplication = () => {
     // Handle application submission here
-    console.log("Application submitted:", { job: selectedJob?.title, ...applicationData })
+    console.log("Application submitted:", applicationData)
     setShowApplicationModal(false)
     setApplicationData({ 
       coverLetter: "", 
@@ -908,209 +908,7 @@ export default function JobsPage() {
                     </div>
                   </div>
 
-    {/* Job Details Modal */}
-    {selectedJob && !showApplicationModal && (
-      <div 
-        className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 lg:p-4"
-        onClick={() => setSelectedJob(null)}
-      >
-        <div 
-          className="bg-white rounded-2xl max-w-4xl w-full max-h-[95vh] lg:max-h-[90vh] overflow-hidden flex flex-col"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Fixed Header */}
-          <div className="flex-shrink-0 sticky top-0 bg-white z-10 p-4 lg:p-6 border-b border-slate-200 rounded-t-2xl">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2 lg:space-x-3">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setSelectedJob(null)}
-                  className="rounded-xl"
-                >
-                  <ArrowLeft className="h-5 w-5" />
-                </Button>
-                <h1 className="text-lg lg:text-2xl font-heading text-primary-navy">Job Details</h1>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setSelectedJob(null)}
-                className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading"
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            </div>
-          </div>
-
-          {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto p-4 lg:p-6 pt-0">
-            {/* Job Content */}
-            <div className="space-y-4 lg:space-y-6">
-              {/* Basic Info */}
-              <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-6">
-                <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden border border-slate-200 flex-shrink-0">
-                  <img src={selectedJob.logo} alt={selectedJob.company} className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1 w-full">
-                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 space-y-2 sm:space-y-0">
-                    <h2 className="text-xl lg:text-2xl font-heading text-primary-navy">{selectedJob.title}</h2>
-                    <span className={`px-3 py-1 rounded-full text-sm font-subheading self-start ${
-                      selectedJob.remote === "Remote" ? "bg-green-100 text-green-700" :
-                      selectedJob.remote === "Hybrid" ? "bg-blue-100 text-blue-700" :
-                      selectedJob.remote === "On-site" ? "bg-red-100 text-red-700" :
-                      "bg-slate-100 text-slate-700"
-                    }`}>
-                      {selectedJob.remote}
-                    </span>
-                  </div>
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 text-slate-600 font-subheading mb-3 space-y-2 sm:space-y-0 text-sm lg:text-base">
-                    <div className="flex items-center space-x-1">
-                      <Building className="h-4 w-4" />
-                      <span>{selectedJob.company}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{selectedJob.location}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <DollarSign className="h-4 w-4" />
-                      <span className="font-heading text-primary-navy">{selectedJob.salary}</span>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2 lg:gap-4 text-slate-500 font-subheading text-sm">
-                    <span>{selectedJob.type}</span>
-                    <span>•</span>
-                    <span>Posted {selectedJob.posted}</span>
-                    <span className="hidden sm:inline">•</span>
-                    <span className="sm:inline block">Apply by {selectedJob.applicationDeadline}</span>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Job Description */}
-              <div>
-                <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Job Description</h3>
-                <p className="text-slate-600 font-subheading leading-relaxed text-sm lg:text-base">{selectedJob.fullDescription}</p>
-              </div>
-
-              {/* Skills Required */}
-              <div>
-                <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Skills Required</h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedJob.skills.map((skill: string, index: number) => (
-                    <Badge key={index} className={`font-subheading text-xs lg:text-sm ${
-                      skill.includes('+') || skill.includes('years') 
-                        ? 'bg-[#0056B3]/10 text-[#0056B3]' 
-                        : 'bg-slate-100 text-slate-700'
-                    }`}>{skill}</Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Requirements */}
-              <div>
-                <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Requirements</h3>
-                <ul className="space-y-2">
-                  {selectedJob.requirements.map((requirement: string, index: number) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <CheckCircle className="h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
-                      <span className="text-slate-600 font-subheading text-sm lg:text-base">{requirement}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Responsibilities */}
-              <div>
-                <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Responsibilities</h3>
-                <ul className="space-y-2">
-                  {selectedJob.responsibilities.map((responsibility: string, index: number) => (
-                    <li key={index} className="flex items-start space-x-2">
-                      <CheckCircle className="h-4 w-4 text-primary-navy mt-1 flex-shrink-0" />
-                      <span className="text-slate-600 font-subheading text-sm lg:text-base">{responsibility}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Company Information */}
-              <div>
-                <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">About the Company</h3>
-                <Card className="border-slate-200">
-                  <CardContent className="p-3 lg:p-4">
-                    <div className="space-y-3">
-                      <div>
-                        <h4 className="font-heading text-primary-navy text-sm lg:text-base">{selectedJob.companyInfo.name}</h4>
-                        <div className="flex flex-wrap items-center gap-2 lg:gap-4 mt-1 text-xs lg:text-sm text-slate-500">
-                          <span>{selectedJob.companyInfo.size}</span>
-                          <span>•</span>
-                          <span>{selectedJob.companyInfo.industry}</span>
-                          <span>•</span>
-                          <span>Founded {selectedJob.companyInfo.founded}</span>
-                        </div>
-                      </div>
-                      <p className="text-slate-600 font-subheading text-sm lg:text-base">{selectedJob.companyInfo.description}</p>
-                      <div>
-                        <h5 className="font-subheading font-medium text-primary-navy mb-2 text-sm lg:text-base">Benefits</h5>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedJob.companyInfo.benefits.map((benefit: string, index: number) => (
-                            <Badge key={index} className="bg-green-50 text-green-700 font-subheading text-xs">{benefit}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                      <div>
-                        <h5 className="font-subheading font-medium text-primary-navy mb-2 text-sm lg:text-base">Company Culture</h5>
-                        <p className="text-slate-600 font-subheading text-sm lg:text-base">{selectedJob.companyInfo.culture}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Hiring Manager */}
-              <div>
-                <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Hiring Manager</h3>
-                <p className="text-slate-600 font-subheading text-sm lg:text-base">{selectedJob.hiringManager}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Fixed Action Buttons */}
-          <div className="flex-shrink-0 sticky bottom-0 bg-white p-4 lg:p-6 pt-4 border-t border-slate-200 rounded-b-2xl">
-            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-              <Button 
-                className="flex-1 bg-primary-navy hover:bg-primary-navy/90 text-white rounded-xl font-subheading h-12"
-                onClick={handleApplyClick}
-              >
-                Apply for this Position
-              </Button>
-              <Button 
-                variant="outline" 
-                className="flex-1 sm:flex-none sm:min-w-[140px] border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading h-12"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  // Handle save job functionality here
-                  console.log("Job saved:", selectedJob?.title)
-                }}
-              >
-                <BookmarkIcon className="h-4 w-4 mr-2" />
-                Save Job
-              </Button>
-            </div>
-            
-            {/* Quick Close Instructions */}
-            <div className="text-center mt-4 pt-2 border-t border-slate-100">
-              <p className="text-xs text-slate-500 font-subheading">
-                Click outside this window or press the X button to close
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
+    {/* Job Details Modal - Removed (now redirects to dedicated page) */}
 
     {/* Application Modal */}
     <Dialog open={showApplicationModal} onOpenChange={setShowApplicationModal}>
@@ -1118,7 +916,7 @@ export default function JobsPage() {
         <DialogHeader className="flex-shrink-0 bg-white z-10 pb-4 border-b border-slate-200 relative">
           <div className="flex items-center justify-between pr-2">
             <DialogTitle className="font-heading text-primary-navy text-base lg:text-lg">
-              Apply for: {selectedJob?.title}
+              Apply for Position
             </DialogTitle>
             <button
               onClick={() => setShowApplicationModal(false)}
@@ -1194,21 +992,7 @@ export default function JobsPage() {
             </div>
           </div>
 
-          {/* Job Information Summary */}
-          {selectedJob && (
-            <Card className="border-slate-200 bg-slate-50">
-              <CardContent className="p-3">
-                <h4 className="font-heading text-primary-navy mb-2 text-sm">Position Summary</h4>
-                <div className="text-xs text-slate-600 font-subheading space-y-1">
-                  <p><strong>Company:</strong> {selectedJob.company}</p>
-                  <p><strong>Location:</strong> {selectedJob.location}</p>
-                  <p><strong>Salary:</strong> {selectedJob.salary}</p>
-                  <p><strong>Type:</strong> {selectedJob.type} • {selectedJob.remote}</p>
-                  <p><strong>Application Deadline:</strong> {selectedJob.applicationDeadline}</p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {/* Job Information Summary - Removed since we redirect to job details pages */}
         </div>
 
         {/* Action Buttons - Fixed at bottom */}

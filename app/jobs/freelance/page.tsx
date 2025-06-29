@@ -4,21 +4,20 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BookmarkIcon, Search, Briefcase, Users, PlusCircle, Filter, FolderOpen, Star, Clock, DollarSign, MapPin, Users2, Calendar, ChevronRight, FileText, CheckCircle, X, ArrowLeft, Upload, Send, MessageCircle } from "lucide-react"
+import { BookmarkIcon, Search, Briefcase, Users, PlusCircle, Filter, FolderOpen, Star, Clock, DollarSign, MapPin, Users2, Calendar, ChevronRight, FileText, CheckCircle, X, ArrowLeft, Send, MessageCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { Separator } from "@/components/ui/separator"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
+
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 
 export default function FreelancePage() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [activeTab, setActiveTab] = useState("gigs")
   const [showFilters, setShowFilters] = useState(false)
   const [showGigsFilters, setShowGigsFilters] = useState(false)
@@ -33,13 +32,8 @@ export default function FreelancePage() {
     }
   }, [searchParams])
   const [selectedProject, setSelectedProject] = useState<any>(null)
-  const [showApplyModal, setShowApplyModal] = useState(false)
-  const [applicationData, setApplicationData] = useState({
-    coverLetter: "",
-    proposedRate: "",
-    timeline: "",
-    portfolio: null
-  })
+
+
   const [selectedFreelancer, setSelectedFreelancer] = useState<any>(null)
   const [showMessageModal, setShowMessageModal] = useState(false)
   const [messageData, setMessageData] = useState({
@@ -274,24 +268,21 @@ export default function FreelancePage() {
   ]
 
   const handleProjectClick = (project: any) => {
-    setSelectedProject(project)
+    // Navigate to the project details page instead of opening modal
+    router.push(`/jobs/freelance/${project.id}`)
   }
 
   const handleApplyClick = (e: any, project: any) => {
     e.stopPropagation()
-    setSelectedProject(project)
-    setShowApplyModal(true)
+    e.preventDefault()
+    router.push(`/jobs/freelance/${project.id}/apply`)
   }
 
-  const handleSubmitApplication = () => {
-    // Handle application submission logic here
-    console.log("Application submitted:", { project: selectedProject?.title, ...applicationData })
-    setShowApplyModal(false)
-    setApplicationData({ coverLetter: "", proposedRate: "", timeline: "", portfolio: null })
-  }
+
 
   const handleFreelancerClick = (freelancer: any) => {
-    setSelectedFreelancer(freelancer)
+    // Navigate to the freelancer details page instead of opening modal
+    router.push(`/jobs/freelance/freelancer/${freelancer.id}`)
   }
 
   const handleContactClick = (e: any, freelancer: any) => {
@@ -315,10 +306,10 @@ export default function FreelancePage() {
 
   return (
     <div className="min-h-full">
-      <div className="w-full max-w-7xl mx-auto px-0 sm:px-3 md:px-4 lg:px-6 py-2 sm:py-4">
+      <div className="w-full sm:w-[95%] md:w-[80%] lg:w-[65%] max-w-none mx-auto px-0 sm:px-3 md:px-4 lg:px-6 py-2 sm:py-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 sm:mb-8 space-y-4 sm:space-y-0 px-3 sm:px-0">
           <div>
-            <h1 className="text-2xl sm:text-4xl font-heading text-primary-navy mb-1 sm:mb-2">Freelance Marketplace</h1>
+            <h1 className="text-2xl sm:text-4xl font-heading-bold text-primary-navy mb-1 sm:mb-2">Freelance Marketplace</h1>
             <p className="text-slate-600 font-subheading text-base sm:text-xl">Find work or hire talented professionals</p>
           </div>
           {activeTab === "freelancers" && (
@@ -368,8 +359,8 @@ export default function FreelancePage() {
                       onClick={() => setShowGigsFilters(!showGigsFilters)}
                       className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-lg font-subheading text-xs whitespace-nowrap px-3 py-1.5"
                     >
-                      <Filter className="h-3 w-3 mr-1" />
-                      Filters
+                      <Filter className="h-3 w-3 sm:mr-1" />
+                      <span className="hidden sm:inline">Filters</span>
                     </Button>
                     <Link href="/jobs/freelance/complete-profile">
                       <Button 
@@ -681,10 +672,11 @@ export default function FreelancePage() {
               return (
                 <Card 
                   key={project.id}
-                        className="sm:border-0 sm:shadow-sm sm:hover:shadow-md transition-all duration-200 sm:rounded-xl md:rounded-2xl sm:bg-white cursor-pointer overflow-hidden"
+                        className="sm:border-0 sm:shadow-sm sm:hover:shadow-md transition-all duration-200 sm:rounded-xl md:rounded-2xl sm:bg-white cursor-pointer overflow-hidden touch-manipulation"
                   onClick={() => handleProjectClick(project)}
+                  style={{ minHeight: '44px' }}
                 >
-                        <CardContent className="p-3 sm:p-4 md:p-6 lg:p-8 overflow-hidden">
+                        <CardContent className="p-4 sm:p-4 md:p-6 lg:p-8 overflow-hidden">
                           <div className="flex items-start w-full">
                             <div className="flex-1 min-w-0 w-full">
                               <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-3 sm:mb-4">
@@ -710,13 +702,25 @@ export default function FreelancePage() {
                               <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0 w-full">
                                 <p className="text-xs sm:text-sm text-slate-500 font-subheading truncate flex-1 min-w-0">Estimated duration: {project.duration} • Posted {project.postedDate}</p>
                                 <div className="flex space-x-2 sm:space-x-3 flex-shrink-0">
-                                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 text-slate-400 hover:text-primary-navy hover:bg-slate-50">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-8 w-8 sm:h-9 sm:w-9 text-slate-400 hover:text-primary-navy hover:bg-slate-50 touch-manipulation"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                    }}
+                                  >
                                     <BookmarkIcon className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                             <Button 
                               size="sm" 
-                                    className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg px-3 sm:px-4 font-subheading text-xs sm:text-sm"
-                              onClick={(e) => handleApplyClick(e, project)}
+                                    className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg px-3 sm:px-4 font-subheading text-xs sm:text-sm touch-manipulation"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handleApplyClick(e, project)
+                              }}
                             >
                               Apply
                             </Button>
@@ -1027,56 +1031,71 @@ export default function FreelancePage() {
             {freelancers.map((freelancer) => (
               <Card 
                 key={freelancer.id}
-                      className="sm:border-0 sm:shadow-sm sm:hover:shadow-md transition-all duration-200 sm:rounded-xl md:rounded-2xl sm:bg-white cursor-pointer overflow-hidden"
+                      className="sm:border-0 sm:shadow-sm sm:hover:shadow-md transition-all duration-200 sm:rounded-xl md:rounded-2xl sm:bg-white cursor-pointer overflow-hidden touch-manipulation"
                 onClick={() => handleFreelancerClick(freelancer)}
+                style={{ minHeight: '44px' }}
               >
-                      <CardContent className="p-3 sm:p-4 md:p-6 lg:p-8 overflow-hidden">
-                        <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-4 lg:space-x-6 w-full">
-                          <div className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary-navy to-slate-700 flex items-center justify-center text-white text-xl sm:text-2xl lg:text-3xl font-heading flex-shrink-0 mx-auto sm:mx-0">
+                      <CardContent className="p-4 sm:p-4 md:p-6 lg:p-8 overflow-hidden">
+                          <div className="flex items-start w-full">
+                            <div className="flex-1 min-w-0 w-full">
+                              <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4 mb-3 sm:mb-4">
+                                <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl bg-gradient-to-br from-primary-navy to-slate-700 flex items-center justify-center text-white text-lg sm:text-xl font-heading flex-shrink-0">
                       {freelancer.initials}
                     </div>
                           <div className="flex-1 min-w-0 w-full">
-                            <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-2 sm:mb-3 space-y-2 sm:space-y-0">
-                              <h3 className="font-heading text-lg sm:text-xl lg:text-2xl text-primary-navy truncate flex-1 min-w-0">{freelancer.name}</h3>
-                              <div className="flex items-center space-x-1 justify-center sm:justify-start flex-shrink-0">
-                                <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-amber-400 text-amber-400" />
-                                <span className="font-subheading font-medium text-primary-navy text-sm sm:text-base">{freelancer.rating}</span>
-                                <span className="text-slate-500 text-xs sm:text-base font-subheading whitespace-nowrap">/5 ({freelancer.reviews} reviews)</span>
+                                  <h3 className="font-heading text-lg sm:text-xl text-primary-navy truncate w-full">{freelancer.name}</h3>
+                                  <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-3 mt-1 sm:mt-2">
+                                    <p className="text-sm sm:text-base text-slate-600 font-subheading truncate">{freelancer.title}</p>
                         </div>
                       </div>
-                            <div className="font-subheading text-slate-600 mb-3 sm:mb-4 text-base sm:text-lg text-center sm:text-left overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                        {freelancer.title}
                             </div>
-                            <div className="text-slate-600 font-subheading leading-relaxed mb-4 sm:mb-5 text-sm sm:text-base text-center sm:text-left overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
+                              <div className="text-slate-600 font-subheading leading-relaxed mb-4 sm:mb-5 text-sm sm:text-base overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
                         {freelancer.shortBio}
                             </div>
-                            <div className="flex flex-wrap gap-1 sm:gap-2 mb-4 sm:mb-5 justify-center sm:justify-start overflow-hidden">
+                              <div className="flex flex-wrap gap-1 sm:gap-2 mb-4 sm:mb-5 overflow-hidden">
                         {freelancer.skills.map((skill, index) => (
-                                <Badge key={index} className="bg-slate-100 text-slate-700 font-subheading text-xs sm:text-sm px-2 sm:px-3 py-1 flex-shrink-0">{skill}</Badge>
+                                  <span key={index} className="text-xs sm:text-sm bg-slate-100 text-slate-700 px-2 sm:px-3 py-1 rounded-full font-medium flex-shrink-0">{skill}</span>
                         ))}
                       </div>
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0 w-full">
-                              <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-3 lg:space-x-4 flex-1 min-w-0">
-                                <div className="flex items-center text-primary-navy flex-shrink-0">
-                                  <DollarSign className="h-4 w-4 sm:h-5 sm:w-5 mr-1" />
-                                  <span className="font-heading text-lg sm:text-xl">${freelancer.rate}/hr</span>
+                              <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0 w-full">
+                                <div className="flex items-center space-x-4 text-xs sm:text-sm text-slate-500 font-subheading truncate flex-1 min-w-0">
+                                  <div className="flex items-center">
+                                    <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                                    <span>${freelancer.rate}/hr</span>
                           </div>
-                                <div className="flex items-center text-slate-500 flex-shrink-0">
-                                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 mr-1" />
-                                  <span className="text-sm sm:text-base font-subheading truncate">{freelancer.availability}</span>
+                                  <div className="flex items-center">
+                                    <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                                    <span>{freelancer.availability}</span>
                           </div>
-                                <div className="flex items-center text-slate-500 flex-shrink-0">
-                                  <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-1" />
-                                  <span className="text-sm sm:text-base font-subheading truncate">{freelancer.location}</span>
+                                  <div className="flex items-center">
+                                    <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                                    <span>{freelancer.location}</span>
                           </div>
                         </div>
+                                <div className="flex space-x-2 sm:space-x-3 flex-shrink-0">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon" 
+                                    className="h-8 w-8 sm:h-9 sm:w-9 text-slate-400 hover:text-primary-navy hover:bg-slate-50 touch-manipulation"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                    }}
+                                  >
+                                    <BookmarkIcon className="h-3 w-3 sm:h-4 sm:w-4" />
+                                  </Button>
                         <Button 
                           size="sm" 
-                                className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg px-4 sm:px-6 font-subheading text-sm sm:text-base flex-shrink-0"
-                          onClick={(e) => handleContactClick(e, freelancer)}
+                                    className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg px-3 sm:px-4 font-subheading text-xs sm:text-sm touch-manipulation"
+                                    onClick={(e) => {
+                                      e.preventDefault()
+                                      e.stopPropagation()
+                                      handleContactClick(e, freelancer)
+                                    }}
                         >
                           Contact
                         </Button>
+                                </div>
                       </div>
                     </div>
                   </div>
@@ -1096,596 +1115,11 @@ export default function FreelancePage() {
       </Tabs>
       </div>
 
-      {/* Project Details Modal */}
-      {selectedProject && !showApplyModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4">
-          <div className="bg-white rounded-xl sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-            <div className="p-4 sm:p-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSelectedProject(null)}
-                    className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading h-8 w-8 sm:h-10 sm:w-10"
-                  >
-                    <X className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </Button>
-                  <h1 className="text-lg sm:text-2xl font-heading text-primary-navy">Project Details</h1>
-                </div>
-              </div>
 
-              {/* Project Content */}
-              <div className="space-y-4 sm:space-y-6">
-                {/* Project Header */}
-                <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4">
-                  <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-xl bg-slate-100 flex items-center justify-center mx-auto sm:mx-0">
-                    <selectedProject.icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary-navy" />
-                  </div>
-                  <div className="flex-1 text-center sm:text-left">
-                    <h2 className="text-lg sm:text-xl font-heading text-primary-navy mb-1 sm:mb-2">{selectedProject.title}</h2>
-                    <p className="text-slate-500 font-subheading text-sm sm:text-base">Posted {selectedProject.postedDate}</p>
-                  </div>
-                </div>
 
-                <Separator />
 
-                {/* Project Details Form Layout */}
-                <div className="space-y-4 sm:space-y-6">
-                  {/* Project Title */}
-                  <div className="space-y-2">
-                    <Label className="text-xs sm:text-sm font-subheading font-medium text-primary-navy">Project Title</Label>
-                    <div className="p-2 sm:p-3 bg-slate-50 rounded-xl border border-slate-200">
-                      <p className="font-subheading text-slate-900 text-sm sm:text-base">{selectedProject.title}</p>
-                    </div>
-                  </div>
 
-                  {/* Category */}
-                  <div className="space-y-2">
-                    <Label className="text-xs sm:text-sm font-subheading font-medium text-primary-navy">Category</Label>
-                    <div className="p-2 sm:p-3 bg-slate-50 rounded-xl border border-slate-200">
-                      <p className="font-subheading text-slate-900 text-sm sm:text-base">{selectedProject.category}</p>
-                    </div>
-                  </div>
 
-                {/* Project Description */}
-                  <div className="space-y-2">
-                    <Label className="text-xs sm:text-sm font-subheading font-medium text-primary-navy">Project Description</Label>
-                    <div className="p-3 sm:p-4 bg-slate-50 rounded-xl border border-slate-200">
-                      <p className="font-subheading text-slate-700 leading-relaxed text-sm sm:text-base">{selectedProject.fullDescription}</p>
-                    </div>
-                </div>
-
-                  {/* Required Skills */}
-                  <div className="space-y-2">
-                    <Label className="text-xs sm:text-sm font-subheading font-medium text-primary-navy">Required Skills</Label>
-                    <div className="p-2 sm:p-3 bg-slate-50 rounded-xl border border-slate-200">
-                      <p className="font-subheading text-slate-900 text-sm sm:text-base">{selectedProject.skills.join(", ")}</p>
-                    </div>
-                  </div>
-
-                  {/* Project Budget */}
-                  <div className="space-y-2 sm:space-y-3">
-                    <Label className="text-xs sm:text-sm font-subheading font-medium text-primary-navy">Project Budget</Label>
-                    <div className="p-2 sm:p-3 bg-slate-50 rounded-xl border border-slate-200">
-                      <div className="flex items-center space-x-2 mb-1 sm:mb-2">
-                        <div className="h-3 w-3 sm:h-4 sm:w-4 rounded-full border-2 border-primary-navy bg-primary-navy"></div>
-                        <span className="font-subheading text-slate-700 text-sm sm:text-base">{selectedProject.budgetType}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Budget Range */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-6">
-                    <div className="space-y-2">
-                      <Label className="text-xs sm:text-sm font-subheading font-medium text-primary-navy">Minimum Budget</Label>
-                      <div className="p-2 sm:p-3 bg-slate-50 rounded-xl border border-slate-200">
-                        <p className="font-subheading text-slate-900 text-sm sm:text-base">${selectedProject.minBudget.toLocaleString()}</p>
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-xs sm:text-sm font-subheading font-medium text-primary-navy">Maximum Budget</Label>
-                      <div className="p-2 sm:p-3 bg-slate-50 rounded-xl border border-slate-200">
-                        <p className="font-subheading text-slate-900 text-sm sm:text-base">${selectedProject.maxBudget.toLocaleString()}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Estimated Duration */}
-                  <div className="space-y-2">
-                    <Label className="text-xs sm:text-sm font-subheading font-medium text-primary-navy">Estimated Duration</Label>
-                    <div className="p-2 sm:p-3 bg-slate-50 rounded-xl border border-slate-200">
-                      <p className="font-subheading text-slate-900 text-sm sm:text-base">{selectedProject.duration}</p>
-                    </div>
-                  </div>
-
-                  {/* Attachments */}
-                  <div className="space-y-2">
-                    <Label className="text-sm font-subheading font-medium text-primary-navy">Attachments {selectedProject.attachments.length === 0 && "(Optional)"}</Label>
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                      {selectedProject.attachments.length > 0 ? (
-                        <div className="space-y-2">
-                          {selectedProject.attachments.map((attachment: any, index: number) => (
-                            <div key={index} className="flex items-center space-x-3 p-2 bg-white rounded-lg border border-slate-200">
-                              <div className="h-8 w-8 bg-primary-navy/10 rounded-lg flex items-center justify-center">
-                                <span className="text-xs font-bold text-primary-navy">{attachment.type}</span>
-                              </div>
-                              <div className="flex-1">
-                                <p className="font-subheading text-sm text-slate-900">{attachment.name}</p>
-                                <p className="text-xs text-slate-500">{attachment.size}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="font-subheading text-slate-500 text-center py-2">No attachments provided</p>
-                      )}
-                  </div>
-                </div>
-
-                  {/* Requirements */}
-                  {selectedProject.requirements && selectedProject.requirements.trim() !== "" && (
-                    <div className="space-y-2">
-                      <Label className="text-sm font-subheading font-medium text-primary-navy">Requirements</Label>
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <div className="space-y-2">
-                          {selectedProject.requirements.split('\n').map((requirement: string, index: number) => (
-                            <div key={index} className="flex items-start space-x-2">
-                              <span className="font-subheading text-slate-700">{requirement}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Responsibilities */}
-                  {selectedProject.responsibilities && selectedProject.responsibilities.trim() !== "" && (
-                    <div className="space-y-2">
-                      <Label className="text-sm font-subheading font-medium text-primary-navy">Responsibilities</Label>
-                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                        <div className="space-y-2">
-                          {selectedProject.responsibilities.split('\n').map((responsibility: string, index: number) => (
-                            <div key={index} className="flex items-start space-x-2">
-                              <span className="font-subheading text-slate-700">{responsibility}</span>
-                            </div>
-                    ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Client Information */}
-                <div>
-                  <h3 className="text-lg font-heading text-primary-navy mb-3">About the Client</h3>
-                  <Card className="border-slate-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-heading text-primary-navy">{selectedProject.client.name}</h4>
-                          <div className="flex items-center space-x-4 mt-1">
-                            <div className="flex items-center space-x-1">
-                              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                              <span className="font-subheading text-sm">{selectedProject.client.rating}/5</span>
-                              <span className="text-xs text-slate-500">({selectedProject.client.reviews} reviews)</span>
-                            </div>
-                            <span className="text-xs text-slate-500">{selectedProject.client.jobsPosted} jobs posted</span>
-                            <span className="text-xs text-slate-500">Member since {selectedProject.client.memberSince}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex space-x-4 pt-4">
-                  <Button 
-                    className="flex-1 bg-primary-navy hover:bg-slate-800 text-white rounded-xl font-subheading"
-                    onClick={() => setShowApplyModal(true)}
-                  >
-                    Apply to Project
-                  </Button>
-                  <Button variant="outline" className="rounded-xl font-subheading">
-                    <BookmarkIcon className="h-4 w-4 mr-2" />
-                    Save Project
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Apply Modal */}
-      <Dialog open={showApplyModal} onOpenChange={setShowApplyModal}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="font-heading text-primary-navy">
-              Apply to: {selectedProject?.title}
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-6 mt-4">
-            {/* Cover Letter */}
-            <div>
-              <Label htmlFor="coverLetter" className="font-subheading text-primary-navy">Cover Letter</Label>
-              <Textarea
-                id="coverLetter"
-                placeholder="Explain why you're the perfect fit for this project..."
-                value={applicationData.coverLetter}
-                onChange={(e) => setApplicationData({...applicationData, coverLetter: e.target.value})}
-                className="mt-2 min-h-[120px] rounded-xl font-subheading"
-              />
-            </div>
-
-            {/* Proposed Rate */}
-            <div>
-              <Label htmlFor="proposedRate" className="font-subheading text-primary-navy">Your Proposed Rate</Label>
-              <Input
-                id="proposedRate"
-                placeholder="Enter your rate (e.g., $50/hour or $2000 fixed)"
-                value={applicationData.proposedRate}
-                onChange={(e) => setApplicationData({...applicationData, proposedRate: e.target.value})}
-                className="mt-2 rounded-xl font-subheading"
-              />
-            </div>
-
-            {/* Timeline */}
-            <div>
-              <Label htmlFor="timeline" className="font-subheading text-primary-navy">Estimated Timeline</Label>
-              <Input
-                id="timeline"
-                placeholder="How long will this project take? (e.g., 2-3 weeks)"
-                value={applicationData.timeline}
-                onChange={(e) => setApplicationData({...applicationData, timeline: e.target.value})}
-                className="mt-2 rounded-xl font-subheading"
-              />
-            </div>
-
-            {/* Portfolio/Attachments */}
-            <div>
-              <Label htmlFor="portfolio" className="font-subheading text-primary-navy">Portfolio/Relevant Work (Optional)</Label>
-              <div className="mt-2 border-2 border-dashed border-slate-300 rounded-xl p-6 text-center">
-                <Upload className="h-8 w-8 text-slate-400 mx-auto mb-2" />
-                <p className="text-sm text-slate-600 font-subheading">
-                  Drop files here or click to upload
-                </p>
-                <p className="text-xs text-slate-500 mt-1">
-                  PDF, DOC, or image files up to 10MB
-                </p>
-              </div>
-            </div>
-
-            {/* Project Budget Information */}
-            {selectedProject && (
-              <Card className="border-slate-200 bg-slate-50">
-                <CardContent className="p-4">
-                  <h4 className="font-heading text-primary-navy mb-2">Project Budget: {selectedProject.budget}</h4>
-                  <p className="text-sm text-slate-600 font-subheading">
-                    Make sure your proposed rate aligns with the client's budget range.
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Action Buttons */}
-            <div className="flex space-x-4 pt-4">
-              <Button 
-                variant="outline" 
-                className="flex-1 border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading"
-                onClick={() => setShowApplyModal(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                className="flex-1 bg-primary-navy hover:bg-slate-800 text-white rounded-xl font-subheading"
-                onClick={handleSubmitApplication}
-              >
-                <Send className="h-4 w-4 mr-2" />
-                Submit Application
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Freelancer Details Modal */}
-      {selectedFreelancer && !showMessageModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-3 sm:p-4">
-          <div className="bg-white rounded-xl sm:rounded-2xl max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
-            <div className="p-4 sm:p-6">
-              {/* Header */}
-              <div className="flex items-center justify-between mb-4 sm:mb-6">
-                <div className="flex items-center space-x-2 sm:space-x-3">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setSelectedFreelancer(null)}
-                    className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading h-8 w-8 sm:h-10 sm:w-10"
-                  >
-                    <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-                  </Button>
-                  <h1 className="text-lg sm:text-2xl font-heading text-primary-navy">Freelancer Profile</h1>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setSelectedFreelancer(null)}
-                  className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading h-8 w-8 sm:h-10 sm:w-10"
-                >
-                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
-                </Button>
-              </div>
-
-              {/* Freelancer Profile Content */}
-              <div className="space-y-4 sm:space-y-6">
-                {/* Basic Info */}
-                <div className="flex flex-col sm:flex-row sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
-                  <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary-navy to-slate-700 flex items-center justify-center text-white text-2xl sm:text-3xl font-heading mx-auto sm:mx-0">
-                    {selectedFreelancer.initials}
-                  </div>
-                  <div className="flex-1 text-center sm:text-left">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 space-y-2 sm:space-y-0">
-                      <h2 className="text-xl sm:text-2xl font-heading text-primary-navy">{selectedFreelancer.name}</h2>
-                      <div className="flex items-center space-x-1 justify-center sm:justify-start">
-                        <Star className="h-4 w-4 sm:h-5 sm:w-5 fill-amber-400 text-amber-400" />
-                        <span className="font-subheading font-medium text-primary-navy text-base sm:text-lg">{selectedFreelancer.rating}</span>
-                        <span className="text-slate-500 font-subheading text-sm sm:text-base">/5 ({selectedFreelancer.reviews} reviews)</span>
-                      </div>
-                    </div>
-                    <p className="text-base sm:text-lg font-subheading text-slate-600 mb-3">{selectedFreelancer.title}</p>
-                    <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-slate-500 font-subheading text-sm sm:text-base">
-                      <div className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        <span>{selectedFreelancer.location}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span>{selectedFreelancer.availability}</span>
-                      </div>
-                    <div className="flex items-center">
-                        <DollarSign className="h-4 w-4 mr-1" />
-                        <span className="font-heading text-primary-navy">${selectedFreelancer.rate}/hr</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-                  <div className="text-center p-3 sm:p-4 bg-slate-50 rounded-xl">
-                    <div className="text-lg sm:text-2xl font-heading text-primary-navy">{selectedFreelancer.completedProjects}</div>
-                    <div className="text-xs sm:text-sm font-subheading text-slate-600">Projects Completed</div>
-                  </div>
-                  <div className="text-center p-3 sm:p-4 bg-slate-50 rounded-xl">
-                    <div className="text-lg sm:text-2xl font-heading text-primary-navy">{selectedFreelancer.clientRetention}</div>
-                    <div className="text-xs sm:text-sm font-subheading text-slate-600">Client Retention</div>
-                  </div>
-                  <div className="text-center p-3 sm:p-4 bg-slate-50 rounded-xl">
-                    <div className="text-lg sm:text-2xl font-heading text-primary-navy">{selectedFreelancer.experience}</div>
-                    <div className="text-xs sm:text-sm font-subheading text-slate-600">Experience</div>
-                  </div>
-                  <div className="text-center p-3 sm:p-4 bg-slate-50 rounded-xl">
-                    <div className="text-lg sm:text-2xl font-heading text-primary-navy">{selectedFreelancer.responseTime}</div>
-                    <div className="text-xs sm:text-sm font-subheading text-slate-600">Response Time</div>
-                  </div>
-                </div>
-
-                {/* Professional Summary */}
-                {selectedFreelancer.professionalSummary && (
-                <div>
-                    <h3 className="text-base sm:text-lg font-heading text-primary-navy mb-2 sm:mb-3">Professional Summary</h3>
-                    <p className="text-slate-600 font-subheading leading-relaxed text-sm sm:text-base">{selectedFreelancer.professionalSummary}</p>
-                </div>
-                )}
-
-                {/* Recent Work & Portfolio */}
-                {selectedFreelancer.recentWork && selectedFreelancer.recentWork.length > 0 && (
-                <div>
-                    <h3 className="text-base sm:text-lg font-heading text-primary-navy mb-2 sm:mb-3">Recent Work & Portfolio</h3>
-                    <div className="space-y-3 sm:space-y-4">
-                      {selectedFreelancer.recentWork.map((work: any, index: number) => (
-                        <Card key={index} className="border-slate-200">
-                          <CardContent className="p-4 sm:p-6">
-                            <div className="flex flex-col sm:flex-row sm:items-start justify-between mb-3 space-y-2 sm:space-y-0">
-                              <div className="flex-1">
-                                <h4 className="font-heading text-primary-navy text-base sm:text-lg mb-1">{work.projectTitle}</h4>
-                                <p className="text-xs sm:text-sm font-subheading text-slate-500">{work.client} • Completed: {work.completedDate}</p>
-                              </div>
-                              {work.projectUrl && (
-                                <a 
-                                  href={work.projectUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="text-primary-navy hover:underline text-xs sm:text-sm font-subheading"
-                                >
-                                  View Project
-                                </a>
-                              )}
-                            </div>
-                            <p className="text-slate-600 font-subheading mb-3 text-sm sm:text-base">{work.description}</p>
-                            <div className="flex flex-wrap gap-1 sm:gap-2">
-                              {work.technologies.split(', ').map((tech: string, techIndex: number) => (
-                                <Badge key={techIndex} className="bg-slate-100 text-slate-700 font-subheading text-xs">{tech}</Badge>
-                              ))}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Skills & Tools */}
-                <div>
-                  <h3 className="text-base sm:text-lg font-heading text-primary-navy mb-2 sm:mb-3">Skills & Tools</h3>
-                  <div className="flex flex-wrap gap-1 sm:gap-2">
-                    {selectedFreelancer.skills.map((skill: string, index: number) => (
-                      <Badge key={index} className="bg-[#0056B3]/10 text-[#0056B3] font-subheading px-2 sm:px-3 py-1 text-xs sm:text-sm">{skill}</Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Languages */}
-                <div>
-                  <h3 className="text-base sm:text-lg font-heading text-primary-navy mb-2 sm:mb-3">Languages</h3>
-                  <div className="flex flex-wrap gap-1 sm:gap-2">
-                    {selectedFreelancer.languages.map((language: string, index: number) => (
-                      <Badge key={index} className="bg-slate-100 text-slate-700 font-subheading text-xs sm:text-sm">{language}</Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Pricing & Availability */}
-                <div>
-                  <h3 className="text-base sm:text-lg font-heading text-primary-navy mb-2 sm:mb-3">Pricing & Availability</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                    <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
-                      <div className="text-xs sm:text-sm font-subheading text-slate-500 mb-1">Hourly Rate</div>
-                      <div className="font-heading text-primary-navy text-sm sm:text-base">{selectedFreelancer.currency} ${selectedFreelancer.rate}/hr</div>
-                      </div>
-                    <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
-                      <div className="text-xs sm:text-sm font-subheading text-slate-500 mb-1">Payment Type</div>
-                      <div className="font-subheading text-slate-700 capitalize text-sm sm:text-base">
-                        {selectedFreelancer.paymentType === 'both' ? 'Hourly & Fixed' : selectedFreelancer.paymentType}
-                      </div>
-                    </div>
-                    <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
-                      <div className="text-xs sm:text-sm font-subheading text-slate-500 mb-1">Availability</div>
-                      <div className="font-subheading text-slate-700 text-sm sm:text-base">{selectedFreelancer.availability}</div>
-                    </div>
-                    <div className="bg-slate-50 p-3 sm:p-4 rounded-xl">
-                      <div className="text-xs sm:text-sm font-subheading text-slate-500 mb-1">Response Time</div>
-                      <div className="font-subheading text-slate-700 text-sm sm:text-base">
-                        {selectedFreelancer.responseTime.replace('within-', '').replace('-', ' ')}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Work Preferences */}
-                {selectedFreelancer.workPreferences && (
-                  <div>
-                    <h3 className="text-lg font-heading text-primary-navy mb-3">Work Preferences</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div>
-                        <h4 className="font-subheading font-medium text-slate-700 mb-2">Working Hours & Timezone</h4>
-                        <p className="text-slate-600 font-subheading">{selectedFreelancer.workPreferences.workingHours}</p>
-                        <p className="text-slate-600 font-subheading">{selectedFreelancer.workPreferences.timezone}</p>
-                      </div>
-                      <div>
-                        <h4 className="font-subheading font-medium text-slate-700 mb-2">Preferred Project Types</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedFreelancer.workPreferences.projectTypes.map((type: string, index: number) => (
-                            <Badge key={index} className="bg-blue-50 text-blue-700 font-subheading text-xs">{type}</Badge>
-                    ))}
-                  </div>
-                </div>
-                      <div>
-                        <h4 className="font-subheading font-medium text-slate-700 mb-2">Preferred Industries</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedFreelancer.workPreferences.industries.map((industry: string, index: number) => (
-                            <Badge key={index} className="bg-green-50 text-green-700 font-subheading text-xs">{industry}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Awards & Certifications */}
-                {selectedFreelancer.awards && selectedFreelancer.awards.length > 0 && (
-                <div>
-                    <h3 className="text-lg font-heading text-primary-navy mb-3">Awards & Certifications</h3>
-                    <div className="space-y-4">
-                      {selectedFreelancer.awards.map((award: any, index: number) => (
-                        <Card key={index} className="border-slate-200">
-                          <CardContent className="p-4">
-                            <div className="flex items-start justify-between mb-2">
-                              <div>
-                                <h4 className="font-heading text-primary-navy mb-1">{award.title}</h4>
-                                <p className="text-sm font-subheading text-slate-500">{award.organization} • {award.dateReceived}</p>
-                              </div>
-                              {award.credentialUrl && (
-                                <a 
-                                  href={award.credentialUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="text-primary-navy hover:underline text-sm font-subheading"
-                                >
-                                  Verify
-                                </a>
-                              )}
-                            </div>
-                            {award.description && (
-                              <p className="text-slate-600 font-subheading text-sm">{award.description}</p>
-                            )}
-                            {award.credentialId && (
-                              <p className="text-xs font-subheading text-slate-400 mt-2">ID: {award.credentialId}</p>
-                            )}
-                          </CardContent>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Legacy Portfolio (if available) */}
-                {selectedFreelancer.portfolio && selectedFreelancer.portfolio.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-heading text-primary-navy mb-3">Additional Portfolio</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {selectedFreelancer.portfolio.map((project: any, index: number) => (
-                      <Card key={index} className="border-slate-200">
-                        <CardContent className="p-4">
-                          <h4 className="font-heading text-primary-navy mb-2">{project.name}</h4>
-                          <p className="text-sm font-subheading text-slate-600">{project.description}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-                )}
-
-                {/* Testimonials */}
-                <div>
-                  <h3 className="text-lg font-heading text-primary-navy mb-3">Client Testimonials</h3>
-                  <div className="space-y-4">
-                    {selectedFreelancer.testimonials.map((testimonial: any, index: number) => (
-                      <Card key={index} className="border-slate-200">
-                        <CardContent className="p-4">
-                          <p className="font-subheading text-slate-600 mb-2">"{testimonial.text}"</p>
-                          <p className="text-sm font-subheading text-primary-navy">— {testimonial.client}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex space-x-4 pt-4">
-                  <Button 
-                    className="flex-1 bg-primary-navy hover:bg-slate-800 text-white rounded-xl font-subheading"
-                    onClick={() => setShowMessageModal(true)}
-                  >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    Contact & Message
-                  </Button>
-                  <Button variant="outline" className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading">
-                    <BookmarkIcon className="h-4 w-4 mr-2" />
-                    Save Profile
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Message Modal */}
       {showMessageModal && selectedFreelancer && (

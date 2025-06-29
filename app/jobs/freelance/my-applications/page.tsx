@@ -57,6 +57,9 @@ export default function MyApplicationsPage() {
   const [showMessageModal, setShowMessageModal] = useState(false)
   const [selectedClientForMessage, setSelectedClientForMessage] = useState<any>(null)
   const [messageText, setMessageText] = useState("")
+  const [messages, setMessages] = useState<any[]>([])
+  const [showMessagesSection, setShowMessagesSection] = useState(false)
+  const [selectedConversation, setSelectedConversation] = useState<any>(null)
   const [selectedProjectDetails, setSelectedProjectDetails] = useState<any>(null)
 
   const applications = [
@@ -69,7 +72,7 @@ export default function MyApplicationsPage() {
       budget: "$2,000-3,000",
       budgetType: "Fixed Price",
       appliedDate: "2 days ago",
-      status: "pending",
+      status: "applied",
       lastActivity: "1 day ago",
       proposal: "I have 5+ years of experience building mobile applications with React Native. I've developed over 20 fitness and health apps...",
       skills: ["React Native", "Firebase", "UI/UX", "API Integration"],
@@ -87,15 +90,14 @@ export default function MyApplicationsPage() {
       budget: "$5,000-8,000",
       budgetType: "Fixed Price",
       appliedDate: "5 days ago",
-      status: "interviewed",
+      status: "applied",
       lastActivity: "3 hours ago",
       proposal: "Your e-commerce project caught my attention because it aligns perfectly with my expertise in building scalable online stores...",
       skills: ["React", "Node.js", "MongoDB", "Stripe API", "AWS"],
       estimatedDuration: "8-10 weeks",
       clientLocation: "New York, NY",
       projectPosted: "1 week ago",
-      totalApplicants: 24,
-      interviewDate: "Tomorrow at 3:00 PM"
+      totalApplicants: 24
     },
     {
       id: 3,
@@ -106,7 +108,7 @@ export default function MyApplicationsPage() {
       budget: "$3,000-4,500",
       budgetType: "Fixed Price",
       appliedDate: "1 week ago",
-      status: "shortlisted",
+      status: "applied",
       lastActivity: "2 days ago",
       proposal: "I specialize in creating beautiful, user-friendly mobile app designs. My portfolio includes 50+ successful app designs...",
       skills: ["UI Design", "UX Research", "Figma", "Prototyping", "Mobile Design"],
@@ -472,13 +474,13 @@ export default function MyApplicationsPage() {
       case "in-progress":
         return "bg-blue-100 text-blue-800"
       case "review-required":
-        return "bg-purple-100 text-purple-800"
+        return "bg-blue-100 text-blue-800"
       case "on-hold":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-blue-100 text-blue-800"
       case "completed":
-        return "bg-green-100 text-green-800"
+        return "bg-blue-100 text-blue-800"
       default:
-        return "bg-slate-100 text-slate-700"
+        return "bg-blue-100 text-blue-800"
     }
   }
 
@@ -519,17 +521,17 @@ export default function MyApplicationsPage() {
   const getMilestoneIcon = (status: string) => {
     switch (status) {
       case "completed":
-        return <CheckCircle className="h-4 w-4" />
+        return <CheckCircle className="h-4 w-4 text-blue-600" />
       case "in-progress":
-        return <PlayCircle className="h-4 w-4" />
+        return <PlayCircle className="h-4 w-4 text-blue-600" />
       case "review-required":
-        return <AlertCircle className="h-4 w-4" />
+        return <AlertCircle className="h-4 w-4 text-blue-600" />
       case "on-hold":
-        return <PauseCircle className="h-4 w-4" />
+        return <PauseCircle className="h-4 w-4 text-blue-600" />
       case "pending":
-        return <Clock className="h-4 w-4" />
+        return <Clock className="h-4 w-4 text-blue-600" />
       default:
-        return <Clock className="h-4 w-4" />
+        return <Clock className="h-4 w-4 text-blue-600" />
     }
   }
 
@@ -592,41 +594,31 @@ export default function MyApplicationsPage() {
   }
 
   const handleSendMessage = () => {
-    console.log("Sending message to:", selectedClientForMessage?.clientName, "Message:", messageText)
-    // Here you would typically send the message through your messaging system
+    if (!messageText.trim() || !selectedClientForMessage) return
+    
+    const newMessage = {
+      id: Date.now(),
+      clientName: selectedClientForMessage.clientName,
+      clientAvatar: selectedClientForMessage.clientAvatar,
+      clientRating: selectedClientForMessage.clientRating,
+      projectTitle: selectedClientForMessage.projectTitle,
+      projectId: selectedClientForMessage.id,
+      message: messageText.trim(),
+      timestamp: new Date().toISOString(),
+      status: 'sent'
+    }
+    
+    setMessages(prev => [newMessage, ...prev])
+    console.log("Message sent to:", selectedClientForMessage?.clientName, "Message:", messageText)
+    
     setShowMessageModal(false)
     setMessageText("")
     setSelectedClientForMessage(null)
   }
 
   const handleProjectClick = (application: any) => {
-    // Convert application data to project details format
-    const projectDetails = {
-      id: application.id,
-      title: application.projectTitle,
-      category: getProjectCategory(application.skills),
-      description: application.proposal.substring(0, 200) + "...",
-      fullDescription: application.proposal,
-      skills: application.skills,
-      budgetType: application.budgetType,
-      minBudget: parseInt(application.budget.split('-')[0].replace(/\D/g, '')),
-      maxBudget: parseInt(application.budget.split('-')[1]?.replace(/\D/g, '') || application.budget.replace(/\D/g, '')),
-      budget: application.budget,
-      duration: application.estimatedDuration,
-      postedDate: application.projectPosted,
-      icon: Briefcase,
-      attachments: [],
-      requirements: "",
-      responsibilities: "",
-      client: {
-        name: application.clientName,
-        rating: application.clientRating,
-        reviews: Math.floor(Math.random() * 50) + 10, // Mock data
-        jobsPosted: Math.floor(Math.random() * 30) + 5, // Mock data
-        memberSince: "2022" // Mock data
-      }
-    }
-    setSelectedProjectDetails(projectDetails)
+    // Navigate to applied project details page
+    window.location.href = `/jobs/freelance/applied/${application.id}`
   }
 
   const getProjectCategory = (skills: string[]) => {
@@ -647,59 +639,45 @@ export default function MyApplicationsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800"
-      case "interviewed":
+      case "applied":
         return "bg-blue-100 text-blue-800"
-      case "shortlisted":
-        return "bg-purple-100 text-purple-800"
       case "hired":
-        return "bg-green-100 text-green-800"
+        return "bg-blue-100 text-blue-800"
       case "rejected":
-        return "bg-red-100 text-red-800"
+        return "bg-blue-100 text-blue-800"
       default:
-        return "bg-slate-100 text-slate-700"
+        return "bg-blue-100 text-blue-800"
     }
   }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "pending":
-        return <Clock className="h-4 w-4" />
-      case "interviewed":
-        return <MessageCircle className="h-4 w-4" />
-      case "shortlisted":
-        return <Star className="h-4 w-4" />
+      case "applied":
+        return <Send className="h-4 w-4" />
       case "hired":
         return <CheckCircle className="h-4 w-4" />
       case "rejected":
         return <XCircle className="h-4 w-4" />
       default:
-        return <AlertCircle className="h-4 w-4" />
+        return <Send className="h-4 w-4" />
     }
   }
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "pending":
-        return "Pending Review"
-      case "interviewed":
-        return "Interview Scheduled"
-      case "shortlisted":
-        return "Shortlisted"
+      case "applied":
+        return "Applied"
       case "hired":
-        return "Hired"
+        return "Won"
       case "rejected":
         return "Not Selected"
       default:
-        return status
+        return "Applied"
     }
   }
 
   const statusCounts = {
     total: applications.length,
-    pending: applications.filter(app => app.status === "pending").length,
-    interviewed: applications.filter(app => app.status === "interviewed").length,
     hired: applications.filter(app => app.status === "hired").length,
   }
 
@@ -712,18 +690,18 @@ export default function MyApplicationsPage() {
 
   return (
     <div className="min-h-full pb-20 md:pb-6">
-      <div className="w-full max-w-7xl mx-auto py-4 md:py-6 px-4 md:px-6">
+      <div className="w-full sm:w-[95%] md:w-[80%] lg:w-[65%] mx-auto py-4 md:py-6 px-4 md:px-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 mb-6 md:mb-8">
           <div className="flex items-center space-x-3 sm:space-x-4">
-            <Link href="/jobs">
+            <Link href="/jobs/freelance">
               <Button variant="ghost" size="icon" className="text-slate-400 hover:text-primary-navy hover:bg-slate-50 rounded-full p-2 sm:p-3">
                 <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </Link>
             <div>
               <h1 className="text-2xl sm:text-3xl font-heading text-primary-navy">My Work</h1>
-              <p className="text-slate-600 font-subheading text-sm sm:text-base">Track your applications and manage ongoing projects</p>
+              <p className="text-slate-600 font-subheading text-sm sm:text-base">Track your applied projects and manage ongoing work</p>
             </div>
           </div>
           <Link href="/jobs/freelance">
@@ -735,13 +713,13 @@ export default function MyApplicationsPage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-slate-100 p-1 rounded-xl mb-6 md:mb-8">
+          <TabsList className="grid w-full grid-cols-3 bg-slate-100 p-1 rounded-xl mb-6 md:mb-8">
             <TabsTrigger 
               value="applications" 
               className="rounded-lg font-subheading data-[state=active]:bg-white data-[state=active]:text-primary-navy text-xs sm:text-sm px-2 sm:px-4"
             >
-              <span className="hidden sm:inline">My Applications</span>
-              <span className="sm:hidden">Applications</span>
+              <span className="hidden sm:inline">My Applied Projects</span>
+              <span className="sm:hidden">Applied</span>
               <span className="ml-1">({statusCounts.total})</span>
             </TabsTrigger>
             <TabsTrigger 
@@ -752,12 +730,20 @@ export default function MyApplicationsPage() {
               <span className="sm:hidden">Ongoing</span>
               <span className="ml-1">({ongoingStats.activeProjects})</span>
             </TabsTrigger>
+            <TabsTrigger 
+              value="messages" 
+              className="rounded-lg font-subheading data-[state=active]:bg-white data-[state=active]:text-primary-navy text-xs sm:text-sm px-2 sm:px-4"
+            >
+              <span className="hidden sm:inline">Messages</span>
+              <span className="sm:hidden">Messages</span>
+              <span className="ml-1">({messages.length})</span>
+            </TabsTrigger>
           </TabsList>
 
           {/* Applications Tab */}
           <TabsContent value="applications">
             {/* Stats Overview */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-6 md:mb-8">
               <Card className="border-slate-200 shadow-sm">
                 <CardContent className="p-3 sm:p-4 md:p-6">
                   <div className="flex items-center space-x-2 sm:space-x-3">
@@ -766,20 +752,7 @@ export default function MyApplicationsPage() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-lg sm:text-xl md:text-2xl font-heading text-primary-navy">{statusCounts.total}</p>
-                      <p className="text-xs sm:text-sm font-subheading text-slate-600">Total Applications</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="border-slate-200 shadow-sm">
-                <CardContent className="p-3 sm:p-4 md:p-6">
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                      <Clock className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-yellow-600" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-xl md:text-2xl font-heading text-primary-navy">{statusCounts.pending}</p>
-                      <p className="text-xs sm:text-sm font-subheading text-slate-600">Pending Review</p>
+                      <p className="text-xs sm:text-sm font-subheading text-slate-600">Total Applied Projects</p>
                     </div>
                   </div>
                 </CardContent>
@@ -788,20 +761,7 @@ export default function MyApplicationsPage() {
                 <CardContent className="p-3 sm:p-4 md:p-6">
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-blue-600" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-xl md:text-2xl font-heading text-primary-navy">{statusCounts.interviewed}</p>
-                      <p className="text-xs sm:text-sm font-subheading text-slate-600">Interviews</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card className="border-slate-200 shadow-sm">
-                <CardContent className="p-3 sm:p-4 md:p-6">
-                  <div className="flex items-center space-x-2 sm:space-x-3">
-                    <div className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 bg-green-100 rounded-xl flex items-center justify-center">
-                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-green-600" />
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-blue-600" />
                     </div>
                     <div className="min-w-0">
                       <p className="text-lg sm:text-xl md:text-2xl font-heading text-primary-navy">{statusCounts.hired}</p>
@@ -913,65 +873,56 @@ export default function MyApplicationsPage() {
                   </div>
 
                   {/* Status-specific Information */}
-                  {application.status === "interviewed" && application.interviewDate && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                        <h4 className="font-subheading font-medium text-blue-900 text-sm sm:text-base">Interview Scheduled</h4>
-                      </div>
-                      <p className="text-blue-800 font-subheading text-xs sm:text-sm">{application.interviewDate}</p>
-                    </div>
-                  )}
 
                   {application.status === "hired" && application.contractDetails && (
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                       <div className="flex items-center space-x-2 mb-4">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <h4 className="font-subheading font-medium text-green-900">Contract Active - {application.startDate}</h4>
+                        <CheckCircle className="h-5 w-5 text-blue-600" />
+                        <h4 className="font-subheading font-medium text-blue-900">Contract Active - {application.startDate}</h4>
                       </div>
                       
                       {/* Payment Terms */}
                       <div className="mb-6">
-                        <h5 className="font-subheading font-semibold text-green-900 mb-3">Payment Terms</h5>
+                        <h5 className="font-subheading font-semibold text-blue-900 mb-3">Payment Terms</h5>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                           <div className="bg-white/60 rounded-lg p-3">
-                            <p className="text-green-700 font-medium">Agreed Rate</p>
-                            <p className="text-green-900 font-semibold">{application.contractDetails.agreedRate}</p>
+                            <p className="text-blue-700 font-medium">Agreed Rate</p>
+                            <p className="text-blue-900 font-semibold">{application.contractDetails.agreedRate}</p>
                           </div>
                           <div className="bg-white/60 rounded-lg p-3">
-                            <p className="text-green-700 font-medium">Total Value</p>
-                            <p className="text-green-900 font-semibold">{application.contractDetails.totalProjectValue}</p>
+                            <p className="text-blue-700 font-medium">Total Value</p>
+                            <p className="text-blue-900 font-semibold">{application.contractDetails.totalProjectValue}</p>
                           </div>
                           <div className="bg-white/60 rounded-lg p-3">
-                            <p className="text-green-700 font-medium">Payment Structure</p>
-                            <p className="text-green-900 font-semibold">{application.contractDetails.paymentStructure}</p>
+                            <p className="text-blue-700 font-medium">Payment Structure</p>
+                            <p className="text-blue-900 font-semibold">{application.contractDetails.paymentStructure}</p>
                           </div>
                         </div>
-                        <p className="text-green-800 text-sm mt-2">
+                        <p className="text-blue-800 text-sm mt-2">
                           <span className="font-medium">Payment Terms:</span> {application.contractDetails.paymentTerms}
                         </p>
                       </div>
 
                       {/* Milestones */}
                       <div className="mb-6">
-                        <h5 className="font-subheading font-semibold text-green-900 mb-3">Project Milestones</h5>
+                        <h5 className="font-subheading font-semibold text-blue-900 mb-3">Project Milestones</h5>
                         <div className="space-y-3">
                           {application.contractDetails.milestones.map((milestone, index) => (
                             <div key={index} className="bg-white/60 rounded-lg p-3 flex items-center justify-between">
                               <div className="flex-1">
                                 <div className="flex items-center space-x-2 mb-1">
-                                  <h6 className="font-medium text-green-900">{milestone.name}</h6>
+                                  <h6 className="font-medium text-blue-900">{milestone.name}</h6>
                                   <Badge className={`text-xs ${
-                                    milestone.status === 'completed' ? 'bg-green-600 text-white' :
+                                    milestone.status === 'completed' ? 'bg-blue-600 text-white' :
                                     milestone.status === 'in-progress' ? 'bg-blue-600 text-white' :
-                                    'bg-slate-400 text-white'
+                                    'bg-blue-400 text-white'
                                   }`}>
                                     {milestone.status === 'in-progress' ? 'In Progress' : milestone.status}
                                   </Badge>
                                 </div>
-                                <p className="text-green-700 text-sm">Due: {milestone.dueDate}</p>
+                                <p className="text-blue-700 text-sm">Due: {milestone.dueDate}</p>
                               </div>
-                              <p className="text-green-900 font-semibold">{milestone.amount}</p>
+                              <p className="text-blue-900 font-semibold">{milestone.amount}</p>
                             </div>
                           ))}
                         </div>
@@ -979,35 +930,35 @@ export default function MyApplicationsPage() {
 
                       {/* Contract Details */}
                       <div className="mb-6">
-                        <h5 className="font-subheading font-semibold text-green-900 mb-3">Contract Details</h5>
+                        <h5 className="font-subheading font-semibold text-blue-900 mb-3">Contract Details</h5>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                           <div className="bg-white/60 rounded-lg p-3">
-                            <p className="text-green-700 font-medium">Work Schedule</p>
-                            <p className="text-green-900">{application.contractDetails.workSchedule}</p>
+                            <p className="text-blue-700 font-medium">Work Schedule</p>
+                            <p className="text-blue-900">{application.contractDetails.workSchedule}</p>
                           </div>
                           <div className="bg-white/60 rounded-lg p-3">
-                            <p className="text-green-700 font-medium">Communication</p>
-                            <p className="text-green-900">{application.contractDetails.communicationMethod}</p>
+                            <p className="text-blue-700 font-medium">Communication</p>
+                            <p className="text-blue-900">{application.contractDetails.communicationMethod}</p>
                           </div>
                           <div className="bg-white/60 rounded-lg p-3">
-                            <p className="text-green-700 font-medium">Start Date</p>
-                            <p className="text-green-900">{application.contractDetails.contractStartDate}</p>
+                            <p className="text-blue-700 font-medium">Start Date</p>
+                            <p className="text-blue-900">{application.contractDetails.contractStartDate}</p>
                           </div>
                           <div className="bg-white/60 rounded-lg p-3">
-                            <p className="text-green-700 font-medium">End Date</p>
-                            <p className="text-green-900">{application.contractDetails.contractEndDate}</p>
+                            <p className="text-blue-700 font-medium">End Date</p>
+                            <p className="text-blue-900">{application.contractDetails.contractEndDate}</p>
                           </div>
                         </div>
                       </div>
 
                       {/* Client Requirements */}
                       <div className="mb-6">
-                        <h5 className="font-subheading font-semibold text-green-900 mb-3">Client Requirements</h5>
+                        <h5 className="font-subheading font-semibold text-blue-900 mb-3">Client Requirements</h5>
                         <div className="bg-white/60 rounded-lg p-3">
-                          <ul className="space-y-1 text-sm text-green-800">
+                          <ul className="space-y-1 text-sm text-blue-800">
                             {application.contractDetails.clientRequirements.map((req, index) => (
                               <li key={index} className="flex items-start space-x-2">
-                                <span className="text-green-600 font-bold">•</span>
+                                <span className="text-blue-600 font-bold">•</span>
                                 <span>{req}</span>
                               </li>
                             ))}
@@ -1017,12 +968,12 @@ export default function MyApplicationsPage() {
 
                       {/* Deliverables */}
                       <div className="mb-6">
-                        <h5 className="font-subheading font-semibold text-green-900 mb-3">Project Deliverables</h5>
+                        <h5 className="font-subheading font-semibold text-blue-900 mb-3">Project Deliverables</h5>
                         <div className="bg-white/60 rounded-lg p-3">
-                          <ul className="space-y-1 text-sm text-green-800">
+                          <ul className="space-y-1 text-sm text-blue-800">
                             {application.contractDetails.deliverables.map((deliverable, index) => (
                               <li key={index} className="flex items-start space-x-2">
-                                <span className="text-green-600 font-bold">•</span>
+                                <span className="text-blue-600 font-bold">•</span>
                                 <span>{deliverable}</span>
                               </li>
                             ))}
@@ -1032,12 +983,12 @@ export default function MyApplicationsPage() {
 
                       {/* Terms and Conditions */}
                       <div>
-                        <h5 className="font-subheading font-semibold text-green-900 mb-3">Terms & Conditions</h5>
+                                                  <h5 className="font-subheading font-semibold text-blue-900 mb-3">Terms & Conditions</h5>
                         <div className="bg-white/60 rounded-lg p-3">
-                          <ul className="space-y-2 text-sm text-green-800">
+                          <ul className="space-y-2 text-sm text-blue-800">
                             {application.contractDetails.termsAndConditions.map((term, index) => (
                               <li key={index} className="flex items-start space-x-2">
-                                <span className="text-green-600 font-bold text-xs mt-1">•</span>
+                                <span className="text-blue-600 font-bold text-xs mt-1">•</span>
                                 <span className="leading-relaxed">{term}</span>
                               </li>
                             ))}
@@ -1058,12 +1009,12 @@ export default function MyApplicationsPage() {
                   )}
 
                   {application.status === "rejected" && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <div className="flex items-center space-x-2 mb-2">
-                        <XCircle className="h-5 w-5 text-red-600" />
-                        <h4 className="font-subheading font-medium text-red-900">Application Not Selected</h4>
+                        <XCircle className="h-5 w-5 text-blue-600" />
+                        <h4 className="font-subheading font-medium text-blue-900">Application Not Selected</h4>
                       </div>
-                      <p className="text-red-800 font-subheading text-sm">Thank you for your interest. Keep applying to find the right match!</p>
+                      <p className="text-blue-800 font-subheading text-sm">Thank you for your interest. Keep applying to find the right match!</p>
                     </div>
                   )}
 
@@ -1084,7 +1035,22 @@ export default function MyApplicationsPage() {
                         variant="outline" 
                         size="sm"
                         className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading"
-                        onClick={() => handleViewJobDetails(application)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          window.location.href = `/jobs/freelance/applied/${application.id}/proposal`
+                        }}
+                      >
+                        <FileText className="h-4 w-4 mr-1" />
+                        View Proposal
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="border-slate-300 text-slate-600 hover:bg-slate-50 hover:text-slate-800 rounded-xl font-subheading"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleViewJobDetails(application)
+                        }}
                       >
                         <Eye className="h-4 w-4 mr-1" />
                         View Job
@@ -1093,7 +1059,10 @@ export default function MyApplicationsPage() {
                         <Button 
                           size="sm"
                           className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg font-subheading"
-                          onClick={() => handleMessageClient(application)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleMessageClient(application)
+                          }}
                         >
                           <Mail className="h-4 w-4 mr-1" />
                           Message Client
@@ -1101,19 +1070,26 @@ export default function MyApplicationsPage() {
                       ) : application.status === "hired" ? (
                         <Button 
                           size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white rounded-lg font-subheading"
+                          className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg font-subheading"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleMessageClient(application)
+                          }}
                         >
-                          <Briefcase className="h-4 w-4 mr-1" />
-                          View Workspace
+                          <Mail className="h-4 w-4 mr-1" />
+                          Message
                         </Button>
                       ) : (
                         <Button 
-                          variant="outline" 
                           size="sm"
-                          className="border-slate-200 hover:border-primary-navy hover:text-primary-navy rounded-lg font-subheading"
+                          className="bg-primary-navy hover:bg-slate-800 text-white rounded-lg font-subheading"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleMessageClient(application)
+                          }}
                         >
-                          <ExternalLink className="h-4 w-4 mr-1" />
-                          Similar Projects
+                          <Mail className="h-4 w-4 mr-1" />
+                          Message
                         </Button>
                       )}
                     </div>
@@ -1471,6 +1447,72 @@ export default function MyApplicationsPage() {
                 </CardContent>
               </Card>
             )}
+          </TabsContent>
+
+          {/* Messages Tab */}
+          <TabsContent value="messages">
+            {/* Messages List */}
+            <div className="space-y-4">
+              {messages.length === 0 ? (
+                <Card className="border-slate-200 shadow-sm">
+                  <CardContent className="p-12 text-center">
+                    <div className="h-16 w-16 bg-slate-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <MessageCircle className="h-8 w-8 text-slate-400" />
+                    </div>
+                    <h3 className="text-xl font-heading text-slate-700 mb-2">No messages yet</h3>
+                    <p className="text-slate-500 font-subheading mb-6">Messages you send to clients will appear here.</p>
+                  </CardContent>
+                </Card>
+              ) : (
+                messages.map((message) => (
+                  <Card key={message.id} className="border-slate-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                        onClick={() => setSelectedConversation(message)}>
+                    <CardContent className="p-4">
+                      <div className="flex items-start space-x-4">
+                        <Avatar className="h-12 w-12">
+                          <AvatarFallback className="bg-gradient-to-br from-slate-600 to-slate-800 text-white font-heading">
+                            {message.clientAvatar}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center space-x-2">
+                              <h3 className="font-subheading font-medium text-primary-navy">{message.clientName}</h3>
+                              <div className="flex items-center space-x-1">
+                                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                <span className="text-xs font-subheading text-slate-500">{message.clientRating}</span>
+                              </div>
+                            </div>
+                            <span className="text-xs text-slate-500">
+                              {new Date(message.timestamp).toLocaleDateString()} {new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            </span>
+                          </div>
+                          <p className="text-sm font-subheading text-slate-600 mb-2">Project: {message.projectTitle}</p>
+                          <p className="text-slate-700 font-subheading line-clamp-2">{message.message}</p>
+                          <div className="flex items-center justify-between mt-3">
+                            <Badge className="bg-blue-100 text-blue-800 text-xs">
+                              <Send className="h-3 w-3 mr-1" />
+                              {message.status}
+                            </Badge>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-primary-navy hover:bg-primary-navy hover:text-white text-xs"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setSelectedConversation(message)
+                              }}
+                            >
+                              View Message
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
@@ -1875,6 +1917,104 @@ export default function MyApplicationsPage() {
                     variant="outline" 
                     className="rounded-xl font-subheading"
                     onClick={() => setSelectedProjectDetails(null)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Individual Message Conversation Modal */}
+      {selectedConversation && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-3">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSelectedConversation(null)}
+                    className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl"
+                  >
+                    <ArrowLeft className="h-5 w-5" />
+                  </Button>
+                  <h1 className="text-xl font-heading text-primary-navy">Message Details</h1>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSelectedConversation(null)}
+                  className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              {/* Conversation Content */}
+              <div className="space-y-6">
+                {/* Client Info */}
+                <div className="flex items-center space-x-4 p-4 bg-slate-50 rounded-xl">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback className="bg-gradient-to-br from-slate-600 to-slate-800 text-white font-heading">
+                      {selectedConversation.clientAvatar}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <h3 className="font-subheading font-medium text-primary-navy">{selectedConversation.clientName}</h3>
+                    <div className="flex items-center space-x-1">
+                      <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                      <span className="text-xs font-subheading text-slate-500">{selectedConversation.clientRating}</span>
+                    </div>
+                    <p className="text-sm text-slate-600 mt-1">Project: {selectedConversation.projectTitle}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-slate-500">
+                      {new Date(selectedConversation.timestamp).toLocaleDateString()}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {new Date(selectedConversation.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Message Content */}
+                <div className="space-y-4">
+                  <div className="flex justify-end">
+                    <div className="max-w-[80%] bg-primary-navy text-white p-4 rounded-2xl rounded-br-md">
+                      <p className="font-subheading leading-relaxed">{selectedConversation.message}</p>
+                      <div className="flex items-center justify-end space-x-2 mt-2">
+                        <Badge className="bg-white/20 text-white text-xs">
+                          <Send className="h-3 w-3 mr-1" />
+                          {selectedConversation.status}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-4 pt-4">
+                  <Button 
+                    className="flex-1 bg-primary-navy hover:bg-slate-800 text-white rounded-xl font-subheading"
+                    onClick={() => {
+                      setSelectedConversation(null)
+                      // Find the application and open message modal
+                      const application = applications.find(app => app.id === selectedConversation.projectId)
+                      if (application) handleMessageClient(application)
+                    }}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Reply
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="border-primary-navy text-primary-navy hover:bg-primary-navy hover:text-white rounded-xl font-subheading"
+                    onClick={() => setSelectedConversation(null)}
                   >
                     Close
                   </Button>
