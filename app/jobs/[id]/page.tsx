@@ -102,7 +102,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
   const job = jobs.find(j => j.id === parseInt(params.id))
 
   if (!job) {
-    return (
+  return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-heading text-primary-navy mb-4">Job Not Found</h1>
@@ -141,8 +141,8 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
               <h1 className="text-lg lg:text-2xl font-heading text-primary-navy">Job Details</h1>
-            </div>
-          </div>
+                    </div>
+                  </div>
 
           {/* Job Content */}
           <div className="space-y-6">
@@ -150,7 +150,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
             <div className="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-6">
               <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden border border-slate-200 flex-shrink-0">
                 <img src={job.logo} alt={job.company} className="w-full h-full object-cover" />
-              </div>
+                  </div>
               <div className="flex-1 w-full">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-2 space-y-2 sm:space-y-0">
                   <h2 className="text-xl lg:text-2xl font-heading text-primary-navy">{job.title}</h2>
@@ -167,7 +167,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
                   <div className="flex items-center space-x-1">
                     <Building className="h-4 w-4" />
                     <span>{job.company}</span>
-                  </div>
+              </div>
                   <div className="flex items-center space-x-1">
                     <MapPin className="h-4 w-4" />
                     <span>{job.location}</span>
@@ -185,9 +185,9 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
                   <span className="sm:inline block">Apply by {job.applicationDeadline}</span>
                 </div>
               </div>
-            </div>
+              </div>
 
-            <Separator />
+              <Separator />
 
             {/* Job Description */}
             <div>
@@ -196,7 +196,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
             </div>
 
             {/* Skills Required */}
-            <div>
+              <div>
               <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Skills Required</h3>
               <div className="flex flex-wrap gap-2">
                 {job.skills.map((skill: string, index: number) => (
@@ -205,35 +205,35 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
                       ? 'bg-[#0056B3]/10 text-[#0056B3]' 
                       : 'bg-slate-100 text-slate-700'
                   }`}>{skill}</Badge>
-                ))}
+                  ))}
               </div>
-            </div>
+              </div>
 
             {/* Requirements */}
-            <div>
+              <div>
               <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Requirements</h3>
-              <ul className="space-y-2">
+                <ul className="space-y-2">
                 {job.requirements.map((requirement: string, index: number) => (
                   <li key={index} className="flex items-start space-x-2">
                     <CheckCircle className="h-4 w-4 text-green-500 mt-1 flex-shrink-0" />
                     <span className="text-slate-600 font-subheading text-sm lg:text-base">{requirement}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
             {/* Responsibilities */}
-            <div>
+              <div>
               <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Responsibilities</h3>
-              <ul className="space-y-2">
+                <ul className="space-y-2">
                 {job.responsibilities.map((responsibility: string, index: number) => (
                   <li key={index} className="flex items-start space-x-2">
                     <CheckCircle className="h-4 w-4 text-primary-navy mt-1 flex-shrink-0" />
                     <span className="text-slate-600 font-subheading text-sm lg:text-base">{responsibility}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
             {/* Company Information */}
             <div>
@@ -252,7 +252,7 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
                       </div>
                     </div>
                     <p className="text-slate-600 font-subheading text-sm lg:text-base">{job.companyInfo.description}</p>
-                    <div>
+              <div>
                       <h5 className="font-subheading font-medium text-primary-navy mb-2 text-sm lg:text-base">Benefits</h5>
                       <div className="flex flex-wrap gap-2">
                         {job.companyInfo.benefits.map((benefit: string, index: number) => (
@@ -264,16 +264,16 @@ export default function JobDetailsPage({ params }: { params: { id: string } }) {
                       <h5 className="font-subheading font-medium text-primary-navy mb-2 text-sm lg:text-base">Company Culture</h5>
                       <p className="text-slate-600 font-subheading text-sm lg:text-base">{job.companyInfo.culture}</p>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
             {/* Hiring Manager */}
-            <div>
+                <div>
               <h3 className="text-base lg:text-lg font-heading text-primary-navy mb-3">Hiring Manager</h3>
               <p className="text-slate-600 font-subheading text-sm lg:text-base">{job.hiringManager}</p>
-            </div>
+              </div>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6 border-t border-slate-200">
